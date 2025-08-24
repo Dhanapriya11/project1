@@ -1,0 +1,90 @@
+.assignments-container {
+  padding: 20px;
+}
+
+.assignments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.assignments-title {
+  font-size: 2rem;
+  color: #333;
+}
+
+.create-assignment-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-assignment-btn:hover {
+  background-color: #218838;
+}
+
+.assignments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.assignment-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.assignment-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.assignment-details span {
+  display: block;
+  color: #666;
+}
+
+.assignment-status {
+  text-align: center;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.status-graded {
+  background-color: #28a745;
+}
+
+.status-pending {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.assignment-actions a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.assignment-actions a:hover {
+  color: #0056b3;
+}
