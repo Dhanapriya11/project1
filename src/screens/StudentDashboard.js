@@ -40,11 +40,10 @@ const showAlert = (message, type = 'info') => {
   }, 3000);
 };
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [stats, setStats] = useState({
     coursesEnrolled: 0,
     assignmentsDue: 0,
@@ -130,10 +129,6 @@ const StudentDashboard = () => {
       </div>
     );
   }
-
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
 
   return (
     <div className="student-dashboard-container">

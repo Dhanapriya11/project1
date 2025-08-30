@@ -164,7 +164,7 @@ function AppContent() {
       {showSidebar && isAdminRoute && <AdminSidebarNew onToggle={handleSidebarToggle} />}
       {showSidebar && isTeacherRoute && <TeacherSidebar onToggle={handleSidebarToggle} />}
       {showSidebar && isParentRoute && <ParentSidebar isSidebarOpen={!isSidebarCollapsed} />}
-      {showSidebar && isStudentRoute && <StudentSidebar isSidebarCollapsed={isSidebarCollapsed} />}
+      {showSidebar && isStudentRoute && <StudentSidebar isSidebarCollapsed={isSidebarCollapsed} onToggle={handleSidebarToggle} />}
       {showSidebar && isSuperAdminRoute && <SuperAdminSidebar onToggle={handleSidebarToggle} />}
 
       <div className={
@@ -230,7 +230,7 @@ function AppContent() {
           <Route path="/parent/messages" element={<RouteGuard allowedRoles={["parent"]}><ParentMessages /></RouteGuard>} />
 
           {/* Student */}
-          <Route path="/student/dashboard" element={<RouteGuard allowedRoles={["student"]}><StudentDashboard /></RouteGuard>} />
+          <Route path="/student/dashboard" element={<RouteGuard allowedRoles={["student"]}><StudentDashboard isSidebarCollapsed={isSidebarCollapsed} onSidebarToggle={handleSidebarToggle} /></RouteGuard>} />
           <Route path="/student/courses" element={<RouteGuard allowedRoles={["student"]}><StudentCourses /></RouteGuard>} />
           <Route path="/student/assignments" element={<RouteGuard allowedRoles={["student"]}><StudentAssignments /></RouteGuard>} />
           <Route path="/student/grades" element={<RouteGuard allowedRoles={["student"]}><StudentGrades /></RouteGuard>} />
