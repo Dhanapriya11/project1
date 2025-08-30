@@ -1,0 +1,177 @@
+/* Student Sidebar */
+.student-sidebar {
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1a2a6c 0%, #2c3e50 100%);
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.student-sidebar.collapsed {
+  width: 80px;
+}
+
+.student-sidebar-header {
+  padding: 25px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.student-sidebar-header h2 {
+  margin: 0;
+  font-size: 1.6em;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-sidebar.collapsed .student-sidebar-header h2 {
+  display: none;
+}
+
+/* Navigation */
+.student-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.student-sidebar-nav ul {
+  list-style-type: none;
+  padding: 20px 0;
+  margin: 0;
+}
+
+.student-sidebar-nav li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.student-sidebar-nav li:last-child {
+  border-bottom: none;
+}
+
+.student-sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.student-sidebar-nav a:hover,
+.student-sidebar-nav li.active > a {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.student-sidebar-nav .menu-icon {
+  width: 24px;
+  text-align: center;
+  margin-right: 15px;
+  font-size: 1.1em;
+}
+
+.student-sidebar.collapsed .menu-text {
+  display: none;
+}
+
+/* Submenu styles */
+.has-submenu {
+  position: relative;
+}
+
+.submenu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submenu-header:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.submenu-title {
+  display: flex;
+  align-items: center;
+}
+
+.submenu-arrow {
+  transition: transform 0.3s ease;
+}
+
+.has-submenu.open .submenu-arrow {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.has-submenu.open .submenu {
+  max-height: 500px; /* Adjust based on your content */
+}
+
+.submenu a {
+  padding-left: 55px; /* icon width + margin + extra padding */
+}
+
+/* Collapsed state */
+.student-sidebar.collapsed .menu-text,
+.student-sidebar.collapsed .submenu-arrow {
+  display: none;
+}
+
+.student-sidebar.collapsed .menu-icon {
+  margin-right: 0;
+  font-size: 1.3em;
+}
+
+.student-sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 18px 0;
+}
+
+.student-sidebar.collapsed .submenu-header {
+  justify-content: center;
+  padding: 18px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .student-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .student-sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .student-sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+}

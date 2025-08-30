@@ -77,12 +77,55 @@ export const loginUser = async (credentials) => {
 
 // Course API functions
 export const getCourses = async () => {
+  const url = `${API_BASE_URL}/courses`;
+  console.log('Fetching courses from:', url);
+  
   try {
-    const response = await fetch(`${API_BASE_URL}/courses`);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+    
+    console.log('Courses API response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      let errorText;
+      try {
+        errorText = await response.text();
+        // Try to parse as JSON in case it's a JSON error response
+        const errorJson = JSON.parse(errorText);
+        console.error('Courses API error (JSON):', errorJson);
+        throw new Error(errorJson.message || `HTTP error! status: ${response.status}`);
+      } catch (e) {
+        console.error('Courses API error (text):', errorText || 'No error details');
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText || 'Unknown error'}`);
+      }
     }
-    return await response.json();
+    
+    let data;
+    try {
+      data = await response.json();
+      console.log('Courses API response data:', data);
+      
+      // The backend returns the courses array directly
+      if (Array.isArray(data)) {
+        console.log(`Received ${data.length} courses from API`);
+        return data;
+      } else if (data && Array.isArray(data.value)) {
+        console.log(`Received ${data.value.length} courses from API (nested in value)`);
+        return data.value;
+      } else {
+        console.warn('Unexpected courses data format, returning empty array. Data:', data);
+        return [];
+      }
+    } catch (jsonError) {
+      console.error('Error parsing JSON response:', jsonError);
+      throw new Error('Failed to parse courses data');
+    }
   } catch (error) {
     console.error('Error fetching courses:', error);
     throw error;
@@ -106,6 +149,42 @@ export const createCourse = async (courseData) => {
     return await response.json();
   } catch (error) {
     console.error('Error creating course:', error);
+    throw error;
+  }
+};
+
+// User Profile API functions
+export const getCurrentUser = async () => {
+  try {
+    const userData = localStorage.getItem('currentUser');
+    if (!userData) {
+      throw new Error('No user data found');
+    }
+    
+    // Parse the user data from localStorage
+    const user = JSON.parse(userData);
+    
+    // If you need to fetch fresh data, use the ID to get user details
+    // For now, we'll return the stored user data
+    return user;
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    throw error;
+  }
+};
+
+export const updateUser = async (userData) => {
+  try {
+    // In a real app, you would send this to your backend
+    // For now, we'll update the user data in localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const updatedUser = { ...currentUser, ...userData };
+    
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    
+    return updatedUser;
+  } catch (error) {
+    console.error('Error updating user:', error);
     throw error;
   }
 };

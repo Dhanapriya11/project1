@@ -5,8 +5,21 @@ import './TeacherDashboard.css';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ studentCount: 0, courseCount: 0 });
-  const teacherUsername = localStorage.getItem('username') || 'Teacher';
+  const [stats, setStats] = useState({ 
+    studentCount: 0, 
+    courseCount: 0,
+    myCourses: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [teacherUsername, setTeacherUsername] = useState('');
+  
+  // Get user data from localStorage on component mount
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    console.log('Current user from localStorage:', currentUser);
+    setTeacherUsername(currentUser.username || '');
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('isTeacherLoggedIn');
@@ -17,51 +30,171 @@ const TeacherDashboard = () => {
   };
 
   useEffect(() => {
+    if (!teacherUsername) {
+      console.log('No teacher username available yet, skipping data fetch');
+      return;
+    }
+    
     const fetchData = async () => {
+      console.group('Fetching dashboard data');
+      console.log('Teacher username:', teacherUsername);
+      setIsLoading(true);
+      
       try {
-        const users = await getUsers();
-        const courses = await getCourses();
-        const students = users.filter(user => user.role === 'Student');
-        setStats({ studentCount: students.length, courseCount: courses.length });
+        // Fetch data in parallel
+        const [usersResponse, coursesResponse] = await Promise.allSettled([
+          getUsers(),
+          getCourses()
+        ]);
+        
+        // Handle users response
+        let users = [];
+        if (usersResponse.status === 'fulfilled') {
+          users = Array.isArray(usersResponse.value) ? usersResponse.value : [];
+          console.log(`Fetched ${users.length} users`);
+        } else {
+          console.error('Error fetching users:', usersResponse.reason);
+        }
+        
+        // Handle courses response
+        let courses = [];
+        if (coursesResponse.status === 'fulfilled') {
+          courses = Array.isArray(coursesResponse.value) ? coursesResponse.value : [];
+          console.log(`Fetched ${courses.length} courses`);
+        } else {
+          console.error('Error fetching courses:', coursesResponse.reason);
+        }
+        
+        // Filter students
+        const students = users.filter(user => {
+          const userRole = String(user.role || '').toLowerCase();
+          const isStudent = userRole === 'student';
+          return isStudent;
+        });
+        
+        console.log(`Found ${students.length} students`);
+        
+        // Filter teacher's courses
+        console.log('Filtering courses for instructor:', teacherUsername);
+        const myCourses = courses.filter(course => {
+          const instructorMatch = String(course.instructor || '').toLowerCase() === 
+                               teacherUsername.toLowerCase();
+          console.log(`Course: "${course.title}" (ID: ${course._id}), ` +
+                     `Instructor: "${course.instructor}", Match: ${instructorMatch}`);
+          return instructorMatch;
+        });
+        
+        console.log(`Found ${myCourses.length} courses for teacher ${teacherUsername}`);
+        
+        // Update state
+        setStats({ 
+          studentCount: students.length, 
+          courseCount: myCourses.length,
+          myCourses
+        });
+        setError('');
+        
       } catch (error) {
-        console.error("Failed to fetch teacher dashboard data:", error);
+        console.error('Unexpected error in fetchData:', error);
+        setError(`Failed to load dashboard data: ${error.message}`);
+      } finally {
+        console.groupEnd();
+        setIsLoading(false);
       }
     };
+    
     fetchData();
-  }, []);
+  }, [teacherUsername]); // This effect runs when teacherUsername changes
+
+  if (isLoading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="spinner"></div>
+        <p>Loading dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="teacher-dashboard">
       <header className="dashboard-header">
         <div className="header-content">
           <h1>Teacher Dashboard</h1>
-          <p>Welcome, {teacherUsername}!</p>
+          <p>Welcome back, {teacherUsername}!</p>
         </div>
-        <button onClick={handleLogout} className="logout-button">Logout</button>
+        <button onClick={handleLogout} className="logout-button">
+          <i className="fas fa-sign-out-alt"></i> Logout
+        </button>
       </header>
+
+      {error && <div className="error-message">{error}</div>}
+
       <div className="dashboard-stats">
         <div className="stat-card">
-          <h3>Total Students</h3>
-          <p>{stats.studentCount}</p>
+          <div className="stat-icon">
+            <i className="fas fa-users"></i>
+          </div>
+          <div className="stat-info">
+            <h3>Total Students</h3>
+            <p className="stat-number">{stats.studentCount}</p>
+          </div>
         </div>
         <div className="stat-card">
-          <h3>My Courses</h3>
-          <p>{stats.courseCount}</p>
+          <div className="stat-icon">
+            <i className="fas fa-book"></i>
+          </div>
+          <div className="stat-info">
+            <h3>My Courses</h3>
+            <p className="stat-number">{stats.courseCount}</p>
+          </div>
         </div>
       </div>
-      <div className="quick-links">
-        <Link to="/teacher/content-library" className="quick-link-card">
-          <h4>Content Library</h4>
-        </Link>
-        <Link to="/teacher/assignments" className="quick-link-card">
-          <h4>Assignments</h4>
-        </Link>
-        <Link to="/teacher/class-performance" className="quick-link-card">
-          <h4>Class Performance</h4>
-        </Link>
-        <Link to="/teacher/messages" className="quick-link-card">
-          <h4>Messages</h4>
-        </Link>
+
+      <div className="courses-section">
+        <h2>My Courses</h2>
+        {stats.myCourses.length > 0 ? (
+          <div className="courses-grid">
+            {stats.myCourses.map(course => (
+              <div key={course._id} className="course-card">
+                <h3>{course.title}</h3>
+                <p className="course-description">{course.description}</p>
+                <div className="course-meta">
+                  <span className="duration">
+                    <i className="far fa-clock"></i> {course.duration}
+                  </span>
+                  <Link 
+                    to={`/teacher/course/${course._id}`} 
+                    className="view-course"
+                  >
+                    View Course <i className="fas fa-arrow-right"></i>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-courses">
+            <p>You don't have any courses yet.</p>
+            <Link to="/teacher/create-course" className="create-course-btn">
+              Create Your First Course
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="quick-actions">
+        <h2>Quick Actions</h2>
+        <div className="action-buttons">
+          <Link to="/teacher/create-course" className="action-btn primary">
+            <i className="fas fa-plus"></i> Create New Course
+          </Link>
+          <Link to="/teacher/content-library" className="action-btn">
+            <i className="fas fa-book-open"></i> Content Library
+          </Link>
+          <Link to="/teacher/assignments" className="action-btn">
+            <i className="fas fa-tasks"></i> Assignments
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -1,44 +1,25 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const RouteGuard = ({ children, allowedRole }) => {
-  const navigate = useNavigate();
-  
-  // Get user from localStorage
-  const storedUser = localStorage.getItem('currentUser');
-  const currentUser = storedUser ? JSON.parse(storedUser) : null;
+const RouteGuard = ({ allowedRoles, children }) => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  // Legacy support for admin/superadmin roles
-  const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-  const adminRole = localStorage.getItem('adminRole');
-
-  const hasAccess = () => {
-    // Check for new user roles (Teacher, Parent, Student)
-    if (currentUser && currentUser.role === allowedRole) {
-      return true;
-    }
-
-    // Check for legacy admin roles
-    if (isAdminLoggedIn) {
-      if (allowedRole === 'admin' && adminRole === 'admin') {
-        return true;
-      }
-      if (allowedRole === 'superadmin' && adminRole === 'superadmin') {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  if (!hasAccess()) {
-    // If a user is logged in but has the wrong role, you could redirect them to their own dashboard.
-    // For simplicity, we'll just redirect to login if access is denied.
-    navigate('/login');
-    return null;
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
   }
-  
-  return children;
+
+  const userRole = currentUser.role?.toLowerCase();
+
+  // Normalize allowedRoles into an array
+  const rolesArray = Array.isArray(allowedRoles)
+    ? allowedRoles.map(r => r.toLowerCase())
+    : [allowedRoles.toLowerCase()];
+
+  if (rolesArray.includes(userRole)) {
+    return children;
+  }
+
+  return <Navigate to="/login" replace />;
 };
 
 export default RouteGuard;
