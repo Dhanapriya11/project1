@@ -13,7 +13,7 @@ const SuperAdminSidebar = ({ onToggle }) => {
   const location = useLocation();
   
   const menuItems = [
-    { name: 'Dashboard', path: '/super-admin-dashboard', icon: faHome },
+    { name: 'Dashboard', path: '/superadmin/dashboard', icon: faHome },
     { name: 'User Management', path: '/user-management', icon: faUsers },
     { name: 'Role & Permission Management', path: '/role-permission-management', icon: faLock },
     { name: 'Academic Content Control', path: '/academic-content-control', icon: faBook },
