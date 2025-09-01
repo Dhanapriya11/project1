@@ -1,18 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUsers, getCourses } from '../services/api';
+import { 
+  Card, 
+  Row, 
+  Col, 
+  Statistic, 
+  Progress, 
+  Avatar, 
+  Badge, 
+  Tabs, 
+  List, 
+  Button, 
+  Space,
+  Divider,
+  Tag
+} from 'antd';
+import { 
+  UserOutlined, 
+  BookOutlined, 
+  ScheduleOutlined, 
+  BarChartOutlined, 
+  BellOutlined,
+  PlusOutlined,
+  ArrowRightOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  MessageOutlined,
+  FileTextOutlined,
+  StarOutlined,
+  ExclamationCircleOutlined,
+  NotificationOutlined,
+  FileOutlined
+} from '@ant-design/icons';
 import './TeacherDashboard.css';
+
+// Import new components
+import ClassPerformance from './ClassPerformance';
+import TeacherMessaging from './TeacherMessaging';
+import Notifications from './Notifications';
+import Leaderboard from './Leaderboard';
+import StudyMaterial from './StudyMaterial';
+import HomeworkReminders from './HomeworkReminders';
+
+const { TabPane } = Tabs;
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ 
-    studentCount: 0, 
+  const [stats, setStats] = useState({
+    studentCount: 0,
     courseCount: 0,
-    myCourses: []
+    myCourses: [],
+    pendingAssignments: 0,
+    averageScores: { overall: 0 },
+    attendanceRate: 0
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [teacherUsername, setTeacherUsername] = useState('');
+  const [notifications, setNotifications] = useState([]);
+  const [teacherProfile, setTeacherProfile] = useState({
+    name: '',
+    qualifications: '',
+    contact: '',
+    subjects: [],
+    timetable: {}
+  });
   
   // Get user data from localStorage on component mount
   useEffect(() => {
@@ -87,11 +140,13 @@ const TeacherDashboard = () => {
         console.log(`Found ${myCourses.length} courses for teacher ${teacherUsername}`);
         
         // Update state
-        setStats({ 
+        setStats(prevStats => ({ 
+          ...prevStats,
           studentCount: students.length, 
           courseCount: myCourses.length,
-          myCourses
-        });
+          myCourses,
+          averageScores: prevStats.averageScores || { overall: 0 }
+        }));
         setError('');
         
       } catch (error) {
@@ -115,87 +170,188 @@ const TeacherDashboard = () => {
     );
   }
 
+  // Sample upcoming deadlines
+  const upcomingDeadlines = [
+    { id: 1, title: 'Math Assignment 1', course: 'Mathematics', dueDate: '2023-06-25', priority: 'high' },
+    { id: 2, title: 'Physics Quiz', course: 'Physics', dueDate: '2023-06-28', priority: 'medium' }
+  ];
+
   return (
     <div className="teacher-dashboard">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1>Teacher Dashboard</h1>
-          <p>Welcome back, {teacherUsername}!</p>
-        </div>
-        <button onClick={handleLogout} className="logout-button">
-          <i className="fas fa-sign-out-alt"></i> Logout
-        </button>
-      </header>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="dashboard-stats">
-        <div className="stat-card">
-          <div className="stat-icon">
-            <i className="fas fa-users"></i>
-          </div>
-          <div className="stat-info">
-            <h3>Total Students</h3>
-            <p className="stat-number">{stats.studentCount}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <i className="fas fa-book"></i>
-          </div>
-          <div className="stat-info">
-            <h3>My Courses</h3>
-            <p className="stat-number">{stats.courseCount}</p>
-          </div>
+      <div className="dashboard-header">
+        <h1>Welcome, {teacherProfile.name || 'Teacher'}</h1>
+        <div className="header-actions">
+          <Button type="primary" icon={<PlusOutlined />}>
+            New
+          </Button>
+          <Button onClick={handleLogout} className="logout-button">
+            Logout
+          </Button>
         </div>
       </div>
-
-      <div className="courses-section">
-        <h2>My Courses</h2>
-        {stats.myCourses.length > 0 ? (
-          <div className="courses-grid">
-            {stats.myCourses.map(course => (
-              <div key={course._id} className="course-card">
-                <h3>{course.title}</h3>
-                <p className="course-description">{course.description}</p>
-                <div className="course-meta">
-                  <span className="duration">
-                    <i className="far fa-clock"></i> {course.duration}
-                  </span>
-                  <Link 
-                    to={`/teacher/course/${course._id}`} 
-                    className="view-course"
-                  >
-                    View Course <i className="fas fa-arrow-right"></i>
-                  </Link>
+      
+      {/* Quick Stats */}
+      <div className="stats-container">
+        <Card className="stat-card">
+          <Statistic 
+            title="Total Students" 
+            value={stats.studentCount || 0} 
+            prefix={<UserOutlined />} 
+          />
+          <div className="stat-trend">+12% from last month</div>
+        </Card>
+        
+        <Card className="stat-card">
+          <Statistic 
+            title="My Courses" 
+            value={stats.courseCount || 0} 
+            prefix={<BookOutlined />} 
+          />
+          <div className="stat-trend">Active: {stats.courseCount || 0}</div>
+        </Card>
+        
+        <Card className="stat-card">
+          <Statistic 
+            title="Pending Grading" 
+            value={stats.pendingAssignments || 0} 
+            prefix={<ScheduleOutlined />} 
+          />
+          <div className="stat-trend">
+            {stats.pendingAssignments > 0 ? 'Needs attention' : 'All caught up'}
+          </div>
+        </Card>
+        
+        <Card className="stat-card">
+          <Statistic 
+            title="Avg. Class Score" 
+            value={stats.averageScores?.overall || 0} 
+            suffix="%" 
+            prefix={<BarChartOutlined />} 
+          />
+          <div className="stat-trend">+5% from last term</div>
+        </Card>
+      </div>
+      
+      {/* Main Content Tabs */}
+      <Tabs defaultActiveKey="1" className="dashboard-tabs">
+        <TabPane tab={
+          <span>
+            <BookOutlined /> Overview
+          </span>
+        } key="1">
+          <Row gutter={[16, 16]}>
+            <Col xs={24} lg={16}>
+              <Card title="Class Performance">
+                <ClassPerformance />
+              </Card>
+              
+              <Card title="Upcoming Deadlines" className="deadlines-card">
+                <List
+                  itemLayout="horizontal"
+                  dataSource={upcomingDeadlines}
+                  renderItem={item => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Badge status={item.priority === 'high' ? 'error' : 'warning'} />
+                        }
+                        title={item.title}
+                        description={`${item.course} • Due: ${new Date(item.dueDate).toLocaleDateString()}`}
+                      />
+                      <Tag color={item.priority === 'high' ? 'red' : 'orange'}>
+                        {item.priority}
+                      </Tag>
+                    </List.Item>
+                  )}
+                  locale={{ emptyText: 'No upcoming deadlines' }}
+                />
+                <div className="view-all">
+                  <Link to="/assignments">View All Assignments <ArrowRightOutlined /></Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="no-courses">
-            <p>You don't have any courses yet.</p>
-            <Link to="/teacher/create-course" className="create-course-btn">
-              Create Your First Course
-            </Link>
-          </div>
-        )}
-      </div>
-
-      <div className="quick-actions">
-        <h2>Quick Actions</h2>
-        <div className="action-buttons">
-          <Link to="/teacher/create-course" className="action-btn primary">
-            <i className="fas fa-plus"></i> Create New Course
-          </Link>
-          <Link to="/teacher/content-library" className="action-btn">
-            <i className="fas fa-book-open"></i> Content Library
-          </Link>
-          <Link to="/teacher/assignments" className="action-btn">
-            <i className="fas fa-tasks"></i> Assignments
-          </Link>
-        </div>
-      </div>
+              </Card>
+              
+              <Card title="Recent Notifications" className="notifications-card">
+                <Notifications isWidget={true} />
+                <div className="view-all">
+                  <Link to="/notifications">View All Notifications <ArrowRightOutlined /></Link>
+                </div>
+              </Card>
+            </Col>
+            
+            <Col xs={24} lg={8}>
+              <Card title="Quick Actions" className="quick-actions">
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Button block icon={<PlusOutlined />} onClick={() => navigate('/assignments/new')}>
+                    Create Assignment
+                  </Button>
+                  <Button block icon={<PlusOutlined />} onClick={() => navigate('/materials/new')}>
+                    Add Study Material
+                  </Button>
+                  <Button block icon={<PlusOutlined />} onClick={() => navigate('/announcements/new')}>
+                    Post Announcement
+                  </Button>
+                  <Divider />
+                  <Button block onClick={() => navigate('/analytics')}>
+                    View Analytics
+                  </Button>
+                </Space>
+              </Card>
+              
+              <Card title="Homework Reminders" className="homework-widget">
+                <HomeworkReminders isWidget={true} />
+                <div className="view-all">
+                  <Link to="/homework">View All Homework <ArrowRightOutlined /></Link>
+                </div>
+              </Card>
+              
+              <Card title="Leaderboard" className="leaderboard-widget">
+                <Leaderboard isWidget={true} />
+                <div className="view-all">
+                  <Link to="/leaderboard">View Full Leaderboard <ArrowRightOutlined /></Link>
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+        
+        <TabPane tab={
+          <span>
+            <MessageOutlined /> Messaging
+          </span>
+        } key="2">
+          <TeacherMessaging />
+        </TabPane>
+        
+        <TabPane tab={
+          <span>
+            <FileTextOutlined /> Study Materials
+          </span>
+        } key="3">
+          <StudyMaterial />
+        </TabPane>
+        
+        <TabPane tab={
+          <span>
+            <BarChartOutlined /> Analytics
+          </span>
+        } key="4">
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Card title="Class Performance Analytics">
+                <ClassPerformance detailedView={true} />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+        
+        <TabPane tab={
+          <span>
+            <BookOutlined /> Leaderboard
+          </span>
+        } key="5">
+          <Leaderboard />
+        </TabPane>
+      </Tabs>
     </div>
   );
 };

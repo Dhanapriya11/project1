@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import './StudentCourses.css';
 
-const StudentCourses = () => {
+const StudentCourses = ({ tab = 'all' }) => {
   // Mock data for demonstration
   const [allCourses, setAllCourses] = useState([
     {
@@ -168,8 +168,8 @@ const StudentCourses = () => {
     }
   ]);
 
-  // State for UI controls
-  const [activeTab, setActiveTab] = useState('all');
+  // Use the tab from props (provided by the route)
+  const activeTab = tab;
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [filterDifficulty, setFilterDifficulty] = useState('All');
@@ -283,19 +283,19 @@ const StudentCourses = () => {
         <div className="header-tabs">
           <button 
             className={activeTab === 'all' ? 'active' : ''} 
-            onClick={() => setActiveTab('all')}
+            onClick={() => window.location.href = '/student/courses/all'}
           >
             <FontAwesomeIcon icon={faBook} /> All Courses
           </button>
           <button 
             className={activeTab === 'my' ? 'active' : ''} 
-            onClick={() => setActiveTab('my')}
+            onClick={() => window.location.href = '/student/courses/enrolled'}
           >
             <FontAwesomeIcon icon={faGraduationCap} /> My Courses
           </button>
           <button 
             className={activeTab === 'recommended' ? 'active' : ''} 
-            onClick={() => setActiveTab('recommended')}
+            onClick={() => window.location.href = '/student/courses/recommended'}
           >
             <FontAwesomeIcon icon={faStar} /> Recommended
           </button>
@@ -394,7 +394,7 @@ const StudentCourses = () => {
       )}
 
       {/* My Courses Tab */}
-      {activeTab === 'my' && (
+      {(activeTab === 'my' || activeTab === 'enrolled') && (
         <div className="courses-tab-content">
           <div className="courses-grid">
             {myCourses.map(course => (

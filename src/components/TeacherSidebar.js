@@ -18,6 +18,7 @@ const TeacherSidebar = ({ onToggle }) => {
     { name: 'Assignments', path: '/teacher/assignments', icon: faTasks },
     { name: 'Class Performance', path: '/teacher/class-performance', icon: faChartBar },
     { name: 'Messages', path: '/teacher/messages', icon: faEnvelope },
+    { name: 'Notifications', path: '/teacher/notifications', icon: faBell },
     { name: 'Leaderboard', path: '/teacher/leaderboard', icon: faTrophy },
     { name: 'JEE/NEET Material', path: '/teacher/jee-neet-material', icon: faFlask },
     { name: 'Homework Reminders', path: '/teacher/homework-reminders', icon: faBell },

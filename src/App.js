@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import './App.css';
 
 import Sidebar from './components/Sidebar';
@@ -231,7 +231,12 @@ function AppContent() {
 
           {/* Student */}
           <Route path="/student/dashboard" element={<RouteGuard allowedRoles={["student"]}><StudentDashboard isSidebarCollapsed={isSidebarCollapsed} onSidebarToggle={handleSidebarToggle} /></RouteGuard>} />
-          <Route path="/student/courses" element={<RouteGuard allowedRoles={["student"]}><StudentCourses /></RouteGuard>} />
+          <Route path="/student/courses" element={<RouteGuard allowedRoles={["student"]}><Outlet /></RouteGuard>}>
+            <Route index element={<StudentCourses tab="all" />} />
+            <Route path="all" element={<StudentCourses tab="all" />} />
+            <Route path="enrolled" element={<StudentCourses tab="enrolled" />} />
+            <Route path="recommended" element={<StudentCourses tab="recommended" />} />
+          </Route>
           <Route path="/student/assignments" element={<RouteGuard allowedRoles={["student"]}><StudentAssignments /></RouteGuard>} />
           <Route path="/student/grades" element={<RouteGuard allowedRoles={["student"]}><StudentGrades /></RouteGuard>} />
           <Route path="/student/calendar" element={<RouteGuard allowedRoles={["student"]}><StudentCalendar /></RouteGuard>} />
