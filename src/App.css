@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.admin-main-content {
+  margin-left: 280px;
+  padding: 25px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.admin-new-main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 25px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 80px;
+}
+
+.main-content-full {
+  width: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  padding: 20px;
+  min-height: 100vh;
+}
+
+
+.teacher-main-content {
+  flex: 1;
+  margin-left: 260px; /* Match sidebar width */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 260px);
+}
+
+.teacher-main-content.sidebar-collapsed {
+  margin-left: 60px; /* Match collapsed sidebar width */
+}
+
+.parent-main-content {
+  flex: 1;
+  margin-left: 280px; /* Match sidebar width */
+  padding: 25px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.parent-main-content.sidebar-collapsed {
+  margin-left: 80px; /* Match collapsed sidebar width */
+}
+
+.student-main-content {
+  flex: 1;
+  margin-left: 280px; /* Match sidebar width */
+  padding: 25px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.student-main-content.sidebar-collapsed {
+  margin-left: 80px; /* Match collapsed sidebar width */
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 250px;
+  }
+  
+  .main-content.sidebar-collapsed {
+    margin-left: 60px;
+  }
+  
+  .admin-main-content {
+    margin-left: 250px;
+  }
+  
+  .admin-main-content.sidebar-collapsed {
+    margin-left: 60px;
+  }
+  
+  .admin-new-main-content {
+    margin-left: 250px;
+  }
+  
+  .admin-new-main-content.sidebar-collapsed {
+    margin-left: 60px;
+  }
+}

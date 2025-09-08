@@ -1,0 +1,266 @@
+/* Main Container */
+.leaderboard-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.leaderboard-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Filters */
+.filters-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 0.9rem;
+  color: #595959;
+  white-space: nowrap;
+}
+
+/* Table Styles */
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Rank Badges */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  font-weight: 600;
+  color: #595959;
+}
+
+.rank-badge.gold {
+  background: linear-gradient(135deg, #ffd700, #ffc107);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.rank-badge.silver {
+  background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(192, 192, 192, 0.3);
+}
+
+.rank-badge.bronze {
+  background: linear-gradient(135deg, #cd7f32, #b87333);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(205, 127, 50, 0.3);
+}
+
+/* Student Cell */
+.student-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.student-avatar {
+  background: #1890ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.student-info {
+  line-height: 1.2;
+}
+
+.student-name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.student-class {
+  font-size: 0.8rem;
+  color: #8c8c8c;
+}
+
+/* Points Cell */
+.points-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.points-value {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Subjects Cell */
+.subjects-cell {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.subject-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.subject-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #595959;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Streak Cell */
+.streak-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: #ff4d4f;
+}
+
+/* Change Indicators */
+.change {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.change.positive {
+  color: #52c41a;
+}
+
+.change.negative {
+  color: #ff4d4f;
+}
+
+.change.neutral {
+  color: #8c8c8c;
+}
+
+/* Top Rows Highlight */
+.top-1 {
+  background-color: #fffbe6 !important;
+  border-left: 3px solid #ffd666;
+}
+
+.top-2 {
+  background-color: #f6ffed !important;
+  border-left: 3px solid #b7eb8f;
+}
+
+.top-3 {
+  background-color: #f9f0ff !important;
+  border-left: 3px solid #d3adf7;
+}
+
+/* Tabs */
+.leaderboard-tabs .ant-tabs-nav {
+  margin: 0 0 16px 0;
+}
+
+.leaderboard-tabs .ant-tabs-tab {
+  padding: 12px 24px;
+  font-weight: 500;
+}
+
+.leaderboard-tabs .ant-tabs-tab-active {
+  font-weight: 600;
+}
+
+/* Subject Tabs */
+.subject-tabs .ant-tabs-nav {
+  margin: 0 0 16px 0;
+}
+
+.subject-tabs .ant-tabs-tab {
+  padding: 8px 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .filter-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .leaderboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ant-table-row {
+  animation: fadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.ant-table-row:nth-child(1) { animation-delay: 0.1s; }
+.ant-table-row:nth-child(2) { animation-delay: 0.15s; }
+.ant-table-row:nth-child(3) { animation-delay: 0.2s; }
+.ant-table-row:nth-child(4) { animation-delay: 0.25s; }
+.ant-table-row:nth-child(5) { animation-delay: 0.3s; }

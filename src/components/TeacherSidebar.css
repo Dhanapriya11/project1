@@ -1,0 +1,82 @@
+/* Basic Sidebar Styles */
+.teacher-sidebar {
+  width: 260px;
+  height: 100vh;
+  background: #001f3f; /* Dark Blue */
+  color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.teacher-sidebar.collapsed {
+  width: 80px;
+}
+
+.teacher-sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #003366;
+}
+
+.teacher-sidebar-header h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.teacher-sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.teacher-sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.teacher-sidebar-nav a:hover,
+.teacher-sidebar-nav a.active {
+  background: #003366; /* Slightly Lighter Blue */
+}
+
+.menu-icon {
+  margin-right: 15px;
+  font-size: 1.2em;
+  width: 25px; /* Fixed width for alignment */
+  text-align: center;
+}
+
+.teacher-sidebar.collapsed .menu-text {
+  display: none;
+}
+
+.teacher-sidebar.collapsed .teacher-sidebar-header h2,
+.teacher-sidebar.collapsed .teacher-sidebar-header p {
+  display: none;
+}
+
+/* Hamburger Menu */
+.teacher-hamburger-menu {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: none;
+  border: none;
+  color: #001f3f;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.teacher-sidebar.open + .teacher-main-content .teacher-hamburger-menu {
+  color: #ffffff;
+}
