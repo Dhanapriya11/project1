@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+
+import React, { useState,useEffect } from 'react';
+
 import { Badge, List, Tabs, Button, Tag, Dropdown, Menu } from 'antd';
 import { 
   BellOutlined, 
@@ -58,9 +60,25 @@ const mockNotifications = {
 // Add unread notifications
 mockNotifications.unread = mockNotifications.all.filter(n => !n.read);
 
-const Notifications = ({ isWidget = false }) => {
+
+const Notifications = ({ isWidget = false, teacherNotifications }) => {
   const [activeTab, setActiveTab] = useState('all');
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState(
+    teacherNotifications && teacherNotifications.length > 0 
+      ? { all: teacherNotifications, unread: teacherNotifications.filter(n => !n.read) }
+      : mockNotifications
+  );
+  
+  // Update notifications when teacherNotifications prop changes
+  useEffect(() => {
+    if (teacherNotifications && teacherNotifications.length > 0) {
+      setNotifications({
+        all: teacherNotifications,
+        unread: teacherNotifications.filter(n => !n.read)
+      });
+    }
+  }, [teacherNotifications]);
+
   
   // Mark notification as read
   const markAsRead = (id) => {
@@ -91,44 +109,62 @@ const Notifications = ({ isWidget = false }) => {
   // Get unread count
   const unreadCount = notifications.all.filter(n => !n.read).length;
 
-  const renderNotificationItem = (item) => (
-    <List.Item
-      key={item.id}
-      className={`notification-item ${!item.read ? 'unread' : ''}`}
-      onClick={() => markAsRead(item.id)}
-    >
-      <List.Item.Meta
-        avatar={
-          <div className="notification-icon">
-            {item.type === 'submission' && <FileOutlined style={{ color: '#1890ff' }} />}
-            {item.type === 'announcement' && <NotificationOutlined style={{ color: '#faad14' }} />}
-            {item.type === 'grade' && <StarOutlined style={{ color: '#52c41a' }} />}
-            {item.type === 'deadline' && <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />}
-          </div>
-        }
-        title={
-          <div className="notification-title">
-            <span>{item.title}</span>
-            <span className="notification-time">{item.time}</span>
-          </div>
-        }
-        description={
-          <>
-            <div className="notification-description">{item.description}</div>
-            {item.meta && (
-              <div className="notification-meta">
-                {Object.entries(item.meta).map(([key, value]) => (
-                  <Tag key={key} color="blue">
-                    {key}: {value}
-                  </Tag>
-                ))}
-              </div>
-            )}
-          </>
-        }
-      />
-    </List.Item>
-  );
+
+  const renderNotificationItem = (item) => {
+    // Get appropriate icon based on notification type
+    const getNotificationIcon = () => {
+      switch(item.type) {
+        case 'submission':
+          return <FileOutlined style={{ color: '#1890ff' }} />;
+        case 'announcement':
+          return <NotificationOutlined style={{ color: '#faad14' }} />;
+        case 'grade':
+          return <StarOutlined style={{ color: '#52c41a' }} />;
+        case 'deadline':
+          return <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />;
+        case 'system':
+        default:
+          return <NotificationOutlined style={{ color: '#52c41a' }} />;
+      }
+    };
+    
+    return (
+      <List.Item
+        key={item.id}
+        className={`notification-item ${!item.read ? 'unread' : ''}`}
+        onClick={() => markAsRead(item.id)}
+      >
+        <List.Item.Meta
+          avatar={
+            <div className="notification-icon">
+              {getNotificationIcon()}
+            </div>
+          }
+          title={
+            <div className="notification-title">
+              <span>{item.title}</span>
+              <span className="notification-time">{item.time}</span>
+            </div>
+          }
+          description={
+            <>
+              <div className="notification-description">{item.description}</div>
+              {item.meta && (
+                <div className="notification-meta">
+                  {Object.entries(item.meta).map(([key, value]) => (
+                    <Tag key={key} color="blue">
+                      {key}: {value}
+                    </Tag>
+                  ))}
+                </div>
+              )}
+            </>
+          }
+        />
+      </List.Item>
+    );
+  };
+
 
   if (isWidget) {
     return (
@@ -142,6 +178,9 @@ const Notifications = ({ isWidget = false }) => {
           dataSource={notifications.all.slice(0, 3)}
           renderItem={renderNotificationItem}
           locale={{ emptyText: 'No recent notifications' }}
+
+          className="notifications-list"
+
         />
       </div>
     );

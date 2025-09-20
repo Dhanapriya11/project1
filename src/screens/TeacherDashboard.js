@@ -58,7 +58,36 @@ const TeacherDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [teacherUsername, setTeacherUsername] = useState('');
-  const [notifications, setNotifications] = useState([]);
+
+  // const [notifications, setNotifications] = useState([]);
+
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: 'Welcome to Your Dashboard',
+      description: 'You have successfully logged in to the teacher portal',
+      time: 'Just now',
+      type: 'system',
+      read: false
+    },
+    {
+      id: 2,
+      title: 'New Assignment Submitted',
+      description: 'Student John Doe has submitted the Math assignment',
+      time: '10 minutes ago',
+      type: 'submission',
+      read: false
+    },
+    {
+      id: 3,
+      title: 'Upcoming Deadline',
+      description: 'Science project submission is due in 2 days',
+      time: '1 hour ago',
+      type: 'deadline',
+      read: true
+    }
+  ]);
+
   const [teacherProfile, setTeacherProfile] = useState({
     name: '',
     qualifications: '',
@@ -271,7 +300,14 @@ const TeacherDashboard = () => {
               </Card>
               
               <Card title="Recent Notifications" className="notifications-card">
+
                 <Notifications isWidget={true} />
+
+                <Notifications 
+                  isWidget={true} 
+                  teacherNotifications={notifications} 
+                />
+
                 <div className="view-all">
                   <Link to="/notifications">View All Notifications <ArrowRightOutlined /></Link>
                 </div>
