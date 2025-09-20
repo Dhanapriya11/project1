@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBell, FaCalendarAlt, FaGraduationCap, FaClipboardCheck, FaEnvelope, FaUserGraduate, FaChartLine, FaExclamationTriangle } from 'react-icons/fa';
-import './ParentDashboard.css';
+import './ParentStyles.css';
 
 // Mock data - Replace with actual API calls
 const mockChildren = [
@@ -77,10 +77,10 @@ const ParentDashboard = () => {
   const currentChild = selectedChild ? getChildStats(selectedChild) : null;
 
   return (
-    <div className="parent-dashboard-container">
+    <div className="parent-container">
       {/* Header Section */}
-      <header className="dashboard-header">
-        <div className="header-content">
+      <header className="parent-header">
+        <div>
           <h1>Parent Dashboard</h1>
           <p>Welcome back, {parentUsername}!</p>
         </div>

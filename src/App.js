@@ -54,6 +54,10 @@ import HomeworkReminders from './screens/HomeworkReminders';
 import AIAssistant from './screens/AIAssistant';
 import ParentMessaging from './screens/ParentMessaging';
 
+import ParentAttendance from './screens/ParentAttendance';
+import ParentEvents from './screens/ParentEvents';
+import ParentGrades from './screens/ParentGrades';
+
 import { getUsers, createUser, loginUser } from './services/api';
 
 // Log when the app starts
@@ -224,9 +228,9 @@ function AppContent() {
 
           {/* Parent */}
           <Route path="/parent/dashboard" element={<RouteGuard allowedRoles={["parent"]}><ParentDashboard /></RouteGuard>} />
-          <Route path="/parent/attendance" element={<RouteGuard allowedRoles={["parent"]}><Attendance /></RouteGuard>} />
-          <Route path="/parent/grades" element={<RouteGuard allowedRoles={["parent"]}><Grades /></RouteGuard>} />
-          <Route path="/parent/events" element={<RouteGuard allowedRoles={["parent"]}><SchoolEvents /></RouteGuard>} />
+          <Route path="/parent/attendance" element={<RouteGuard allowedRoles={["parent"]}><ParentAttendance /></RouteGuard>} />
+          <Route path="/parent/grades" element={<RouteGuard allowedRoles={["parent"]}><ParentGrades /></RouteGuard>} />
+          <Route path="/parent/events" element={<RouteGuard allowedRoles={["parent"]}><ParentEvents /></RouteGuard>} />
           <Route path="/parent/messages" element={<RouteGuard allowedRoles={["parent"]}><ParentMessages /></RouteGuard>} />
 
           {/* Student */}

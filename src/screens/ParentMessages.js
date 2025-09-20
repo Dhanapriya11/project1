@@ -13,7 +13,7 @@ import {
   FaArrowLeft,
   FaEllipsisV
 } from 'react-icons/fa';
-import './ParentDashboard.css';
+import './ParentStyles.css';
 
 // Mock data - Replace with actual API calls
 const mockMessages = {
@@ -77,6 +77,7 @@ const mockMessages = {
 };
 
 const ParentMessages = () => {
+  const navigate = useNavigate();
   const [activeFolder, setActiveFolder] = useState('inbox');
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [composeOpen, setComposeOpen] = useState(false);
@@ -84,7 +85,6 @@ const ParentMessages = () => {
   const [selectedMessages, setSelectedMessages] = useState([]);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [replyMode, setReplyMode] = useState(null); // null, 'reply', 'replyAll', 'forward'
-  const navigate = useNavigate();
 
   // Form state for compose/reply
   const [messageForm, setMessageForm] = useState({

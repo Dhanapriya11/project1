@@ -10,9 +10,10 @@ import {
   FaClock,
   FaInfoCircle,
   FaCheckCircle,
-  FaTimesCircle
+  FaTimesCircle,
+  FaList
 } from 'react-icons/fa';
-import './ParentDashboard.css';
+import './ParentStyles.css';
 
 // Mock data - Replace with actual API calls
 const mockEvents = [
@@ -91,13 +92,13 @@ const eventTypes = [
 ];
 
 const ParentEvents = () => {
+  const navigate = useNavigate();
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedType, setSelectedType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [view, setView] = useState('list'); // 'list' or 'calendar'
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [rsvpStatus, setRsvpStatus] = useState({});
-  const navigate = useNavigate();
 
   // In a real app, this would be fetched from an API
   const [events, setEvents] = useState(mockEvents);
