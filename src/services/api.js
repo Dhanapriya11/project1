@@ -47,6 +47,56 @@ export const createUser = async (userData) => {
   }
 };
 
+export const updateUser = async (userId, userData) => {
+  console.log('Update user API call with data:', { userId, userData });
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+    
+    console.log('Update user API response status:', response.status);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log('Update user API error response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+    
+    const data = await response.json();
+    console.log('Update user API response data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+};
+
+export const deleteUser = async (userId) => {
+  console.log('Delete user API call for user ID:', userId);
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: 'DELETE',
+    });
+    
+    console.log('Delete user API response status:', response.status);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log('Delete user API error response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+    
+    const data = await response.json();
+    console.log('Delete user API response data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+};
+
 // Login API function
 export const loginUser = async (credentials) => {
   console.log('Login API call with credentials:', credentials);
@@ -173,7 +223,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const updateUser = async (userData) => {
+export const updateCurrentUser = async (userData) => {
   try {
     // In a real app, you would send this to your backend
     // For now, we'll update the user data in localStorage
@@ -184,7 +234,7 @@ export const updateUser = async (userData) => {
     
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating current user:', error);
     throw error;
   }
 };

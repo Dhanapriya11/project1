@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lms', {
+mongoose.connect(process.env.MONGODB_URI , {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -180,6 +180,35 @@ app.post('/api/content', async (req, res) => {
   } catch (err) {
     console.error('Error creating content:', err);
     res.status(400).json({ error: err.message });
+  }
+});
+// Add this DELETE endpoint for user deletion
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    console.log('Deleting user with ID:', req.params.id);
+    
+    // First, verify the user exists
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      console.log('User not found with ID:', req.params.id);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Delete the user
+    const result = await User.findByIdAndDelete(req.params.id);
+    console.log('User deleted successfully:', result);
+    
+    res.json({ 
+      success: true,
+      message: 'User deleted successfully' 
+    });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to delete user',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 

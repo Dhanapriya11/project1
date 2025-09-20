@@ -113,22 +113,46 @@ tr:hover {
   font-size: 13px;
   font-weight: 600;
   transition: all 0.3s ease;
+  min-width: 70px;
+  text-align: center;
 }
 
 .action-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0.9;
 }
 
-.action-button:nth-child(1) {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+.action-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-button.edit {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: white;
 }
 
-.action-button:nth-child(2) {
+.action-button.edit:hover {
+  background: linear-gradient(135deg, #2980b9 0%, #2471a3 100%);
+}
+
+.action-button.delete {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
 }
+
+.action-button.delete:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 /* Add User Form Styles */
 .add-user-form {
   background: white;
