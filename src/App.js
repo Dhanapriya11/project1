@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-
+import SuperAdminLayout from './components/SuperAdminLayout';
 import Sidebar from './components/Sidebar';
 import AdminSidebarNew from './components/AdminSidebarNew';
 import SuperAdminSidebar from './components/SuperAdminSidebar';
 import TeacherSidebar from './components/TeacherSidebar';
 import ParentSidebar from './components/ParentSidebar';
 import StudentSidebar from './components/StudentSidebar';
+import TeacherSubjectAssignment from './components/TeacherSubjectAssignment';
+import CourseManagement from './screens/CourseManagement';
 
 import RouteGuard from './components/RouteGuard';
 import Dashboard from './screens/Dashboard';
@@ -171,13 +175,13 @@ function AppContent() {
       {showSidebar && isTeacherRoute && <TeacherSidebar onToggle={handleSidebarToggle} />}
       {showSidebar && isParentRoute && <ParentSidebar isSidebarOpen={!isSidebarCollapsed} />}
       {showSidebar && isStudentRoute && <StudentSidebar isSidebarCollapsed={isSidebarCollapsed} onToggle={handleSidebarToggle} />}
-      {showSidebar && isSuperAdminRoute && <SuperAdminSidebar onToggle={handleSidebarToggle} />}
+      {/* SuperAdminSidebar is handled within SuperAdminLayout */}
 
       <div className={
-        showSidebar
+        showSidebar && !isSuperAdminRoute // Don't add sidebar classes for super admin routes (handled in layout)
           ? isSidebarCollapsed
-            ? `${isStudentRoute ? 'student-main-content' : isParentRoute ? 'parent-main-content' : isTeacherRoute ? 'teacher-main-content' : isAdminRoute ? 'admin-new-main-content' : 'main-content'} sidebar-collapsed`
-            : `${isStudentRoute ? 'student-main-content' : isParentRoute ? 'parent-main-content' : isTeacherRoute ? 'teacher-main-content' : isAdminRoute ? 'admin-new-main-content' : 'main-content'}`
+            ? `${isStudentRoute ? 'student-main-content' : isParentRoute ? 'parent-main-content' : isTeacherRoute ? 'teacher-main-content' : 'admin-new-main-content'} sidebar-collapsed`
+            : `${isStudentRoute ? 'student-main-content' : isParentRoute ? 'parent-main-content' : isTeacherRoute ? 'teacher-main-content' : 'admin-new-main-content'}`
           : 'main-content-full'
       }>
 
@@ -187,25 +191,52 @@ function AppContent() {
           <Route path="/login" element={<LoginPageNew onLogin={handleLogin} onBack={handleBackToLanding} />} />
           <Route path="/dashboard" element={<Dashboard username={currentUser?.username} onLogout={handleLogout} />} />
 
-          {/* Super Admin */}
-          <Route path="/superadmin/dashboard" element={<RouteGuard allowedRoles={["superadmin"]}><SuperAdminDashboard /></RouteGuard>} />
-          <Route path="/user-management" element={<RouteGuard allowedRoles={["superadmin"]}><UserManagement /></RouteGuard>} />
-          <Route path="/role-permission-management" element={<RouteGuard allowedRoles={["superadmin"]}><RolePermissionManagement /></RouteGuard>} />
-          <Route path="/academic-content-control" element={<RouteGuard allowedRoles={["superadmin"]}><AcademicContentControl /></RouteGuard>} />
-          <Route path="/reports-tracking-scheduling" element={<RouteGuard allowedRoles={["superadmin"]}><ReportsTrackingScheduling /></RouteGuard>} />
-          <Route path="/analytics-insights" element={<RouteGuard allowedRoles={["superadmin"]}><AnalyticsInsights /></RouteGuard>} />
-          <Route path="/communication" element={<RouteGuard allowedRoles={["superadmin"]}><Communication /></RouteGuard>} />
-          <Route path="/ai-support-tools" element={<RouteGuard allowedRoles={["superadmin"]}><AISupportTools /></RouteGuard>} />
-          <Route path="/enhancements-accessibility" element={<RouteGuard allowedRoles={["superadmin"]}><EnhancementsAccessibility /></RouteGuard>} />
-          <Route path="/security-maintenance" element={<RouteGuard allowedRoles={["superadmin"]}><SecurityMaintenance /></RouteGuard>} />
-          <Route path="/authentication-profile" element={<RouteGuard allowedRoles={["superadmin"]}><AuthenticationProfile /></RouteGuard>} />
-          <Route path="/feedback" element={<RouteGuard allowedRoles={["superadmin"]}><Feedback /></RouteGuard>} />
+          {/* Super Admin Routes */}
+          <Route element={<RouteGuard allowedRoles={["superadmin"]}><SuperAdminLayout /></RouteGuard>}>
+            <Route index path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
+            
+            {/* User Management */}
+            <Route path="/superadmin/user-management" element={<UserManagement />} />
+            <Route path="/superadmin/user-management/roles" element={<RolePermissionManagement />} />
+            
+            {/* Academic */}
+            <Route path="/superadmin/academic/courses" element={<CourseManagement />} />
+            <Route path="/superadmin/academic/subjects" element={<AcademicContentControl />} />
+            <Route path="/superadmin/academic/batches" element={<div>Batches Management</div>} />
+            
+            {/* Reports */}
+            <Route path="/superadmin/reports/student-progress" element={<ReportsTrackingScheduling />} />
+            <Route path="/superadmin/reports/teacher-performance" element={<AnalyticsInsights />} />
+            <Route path="/superadmin/reports/system-usage" element={<div>System Usage Reports</div>} />
+            
+            {/* System */}
+            <Route path="/superadmin/system/settings" element={<EnhancementsAccessibility />} />
+            <Route path="/superadmin/system/backup" element={<div>Backup & Restore</div>} />
+            <Route path="/superadmin/system/logs" element={<div>System Logs</div>} />
+            
+            {/* Security */}
+            <Route path="/superadmin/security/audit-logs" element={<SecurityMaintenance />} />
+            <Route path="/superadmin/security/login-history" element={<div>Login History</div>} />
+            <Route path="/superadmin/security/settings" element={<AuthenticationProfile />} />
+            
+            {/* Other */}
+            <Route path="/superadmin/notifications" element={<Communication />} />
+            <Route path="/superadmin/settings" element={<Feedback />} />
+            <Route path="/superadmin/teacher-assignments" element={<TeacherSubjectAssignment />} />
+          </Route>
+          
+          {/* Admin Routes */}
+          <Route path="/admin/teacher-assignments" element={
+            <RouteGuard allowedRoles={["admin"]}>
+              <TeacherSubjectAssignment />
+            </RouteGuard>} />
 
           {/* Admin */}
           <Route path="/admin/dashboard" element={<RouteGuard allowedRoles={["admin"]}><AdminDashboard /></RouteGuard>} />
           <Route path="/admin/user-management" element={<RouteGuard allowedRoles={["admin"]}><UserManagement /></RouteGuard>} />
           <Route path="/admin/role-permission-management" element={<RouteGuard allowedRoles={["admin"]}><RolePermissionManagement /></RouteGuard>} />
           <Route path="/admin/academic-content-control" element={<RouteGuard allowedRoles={["admin"]}><AcademicContentControl /></RouteGuard>} />
+          <Route path="/admin/course-management" element={<RouteGuard allowedRoles={["admin"]}><CourseManagement /></RouteGuard>} />
           <Route path="/admin/reports-tracking-scheduling" element={<RouteGuard allowedRoles={["admin"]}><ReportsTrackingScheduling /></RouteGuard>} />
           <Route path="/admin/analytics-insights" element={<RouteGuard allowedRoles={["admin"]}><AnalyticsInsights /></RouteGuard>} />
           <Route path="/admin/communication" element={<RouteGuard allowedRoles={["admin"]}><Communication /></RouteGuard>} />
@@ -254,6 +285,17 @@ function AppContent() {
           <Route path="/student/profile" element={<RouteGuard allowedRoles={["student"]}><StudentProfile /></RouteGuard>} />
         </Routes>
       </div>
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

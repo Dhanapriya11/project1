@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getUsers, createUser, updateUser, deleteUser } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 import './UserManagement.css';
 
 const UserManagement = () => {
@@ -14,6 +15,8 @@ const UserManagement = () => {
     password: '',
     role: 'Student'
   });
+  
+  const navigate = useNavigate();
 
   // Fetch users from the backend
   useEffect(() => {
@@ -132,7 +135,12 @@ const UserManagement = () => {
         <button className="primary-button" onClick={toggleAddUserForm}>
           {showAddUserForm ? 'Cancel' : 'Add New User'}
         </button>
-        <button className="secondary-button" onClick={() => alert('Assign Teachers to Subjects feature to be implemented')}>Assign Teachers to Subjects</button>
+        <button 
+          className="secondary-button" 
+          onClick={() => navigate('/teacher-assignments')}
+        >
+          Assign Teachers to Subjects
+        </button>
       </div>
       
       {/* Add User Form */}

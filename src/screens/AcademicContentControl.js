@@ -75,6 +75,13 @@ const AcademicContentControl = () => {
           {showAddContentForm ? 'Cancel' : 'Add Content'}
         </button>
         <button className="secondary-button">Review Content</button>
+        <button 
+          className="primary-button" 
+          onClick={() => window.location.href = '/admin/course-management'}
+          style={{ marginLeft: '10px' }}
+        >
+          Add Course
+        </button>
       </div>
       
       {/* Add Content Form */}

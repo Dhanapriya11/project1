@@ -40,7 +40,28 @@ const showAlert = (message, type = 'info') => {
   }, 3000);
 };
 
-const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
+const StudentDashboard = () => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
+  
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+  
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobileView = window.innerWidth < 768;
+      setIsMobileView(mobileView);
+      // Auto-collapse sidebar on mobile when resizing to desktop
+      if (!mobileView && isSidebarCollapsed) {
+        setIsSidebarCollapsed(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isSidebarCollapsed]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -131,8 +152,20 @@ const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
   }
 
   return (
-    <div className="student-dashboard-container">
-      <main className={`main-content ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+    <div className="student-dashboard">
+      <button 
+        className="student-hamburger-menu" 
+        onClick={toggleSidebar}
+        aria-label="Toggle sidebar"
+      >
+        ☰
+      </button>
+      
+      <div className={`student-sidebar ${isSidebarCollapsed ? 'collapsed' : ''} ${!isMobileView ? 'open' : ''}`}>
+        <StudentSidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+      </div>
+      
+      <div className={`main-content ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         <header className="dashboard-header">
           <div className="header-content">
             <div>
@@ -235,7 +268,7 @@ const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
             </section>
           </div>
         </div>
-      </main>
+      </div>
       <Outlet />
     </div>
   );

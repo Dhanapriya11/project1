@@ -1,0 +1,317 @@
+/* Course Management Styles */
+.course-management {
+  padding: var(--space-md);
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: var(--font-family);
+}
+
+.course-management h1 {
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-2xl);
+}
+
+.course-management p {
+  color: var(--color-gray-600);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-base);
+}
+
+/* Course Actions */
+.course-actions {
+  margin-bottom: var(--space-lg);
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* Add Course Form */
+.add-course-form {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-gray-200);
+}
+
+.add-course-form h2 {
+  color: var(--color-gray-900);
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+  font-size: var(--font-xl);
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+  color: var(--color-gray-900);
+  font-size: var(--font-sm);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  transition: all 0.2s ease;
+  background-color: var(--color-white);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+/* Courses List */
+.courses-list {
+  margin-top: var(--space-lg);
+}
+
+.courses-list h2 {
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-md);
+  font-size: var(--font-xl);
+}
+
+/* Table Styles */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.courses-table th,
+.courses-table td {
+  padding: var(--space-sm);
+  text-align: left;
+  border-bottom: 1px solid var(--color-gray-200);
+  font-size: var(--font-sm);
+}
+
+.courses-table th {
+  background-color: var(--color-gray-50);
+  font-weight: 600;
+  color: var(--color-gray-900);
+  text-transform: uppercase;
+  font-size: var(--font-xs);
+  letter-spacing: 0.5px;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.courses-table tbody tr:hover {
+  background-color: var(--color-gray-50);
+}
+
+.courses-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* File Upload Styles */
+.file-upload {
+  display: flex;
+  align-items: center;
+  margin-top: var(--space-xs);
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.file-upload-button {
+  background-color: var(--color-white);
+  color: var(--color-gray-900);
+  border: 1px solid var(--color-gray-300);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  margin-right: var(--space-sm);
+  font-weight: 500;
+}
+
+.file-upload-button:hover {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+}
+
+.file-upload-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-gray-600);
+  font-size: var(--font-sm);
+  padding: 0 var(--space-sm);
+}
+
+.upload-progress {
+  margin-top: var(--space-sm);
+  background-color: var(--color-gray-100);
+  border-radius: var(--radius-sm);
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-gray-200);
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background-color: var(--color-blue);
+  transition: width 0.3s ease;
+}
+
+.upload-progress span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-white);
+  font-size: var(--font-xs);
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Syllabus Link */
+.syllabus-link {
+  color: var(--color-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  font-size: var(--font-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.syllabus-link:hover {
+  color: var(--color-blue-600);
+  text-decoration: underline;
+}
+
+/* Button Styles */
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  background: var(--color-blue);
+  color: var(--color-white);
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background: var(--color-gray-200);
+  color: var(--color-gray-900);
+  border: 1px solid var(--color-gray-300);
+}
+
+.secondary-button:hover {
+  background: var(--color-gray-300);
+  border-color: var(--color-gray-400);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-management {
+    padding: var(--space-sm);
+  }
+  
+  .add-course-form {
+    padding: var(--space-md);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+  
+  .courses-table th,
+  .courses-table td {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-xs);
+  }
+  
+  .file-upload {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+  
+  .file-upload-button {
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .file-upload-name {
+    width: 100%;
+    padding: var(--space-xs) 0;
+  }
+}

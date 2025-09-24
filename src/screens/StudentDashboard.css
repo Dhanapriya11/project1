@@ -35,7 +35,7 @@ body, html {
   height: 100%;
 }
 
-.student-dashboard-container {
+.student-dashboard {
   display: flex;
   min-height: 100vh;
   width: 100%;
@@ -43,25 +43,38 @@ body, html {
   padding: 0;
   position: relative;
   overflow: hidden;
+  background-color: #6e7d93;
 }
 
 /* Main Content Area */
 .main-content {
   flex: 1;
-  margin: 0;
   padding: 20px;
+  transition: all 0.3s ease;
   min-height: 100vh;
   background-color: #f5f7fa;
-  transition: var(--transition);
-  position: relative;
+  margin-left: 0px;
   width: calc(100% - 280px);
-  margin-left: 280px;
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
-.main-content.collapsed {
+.main-content.sidebar-collapsed {
   width: calc(100% - 80px);
   margin-left: 80px;
   padding: 20px;
+}
+
+/* Ensure the sidebar is properly positioned */
+.student-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 /* Header Styles */
@@ -539,8 +552,8 @@ body, html {
 
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 0 !important;
+    width: 100% !important;
     padding: 20px 15px;
   }
   

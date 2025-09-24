@@ -182,18 +182,16 @@ export const getCourses = async () => {
   }
 };
 
-export const createCourse = async (courseData) => {
+export const createCourse = async (formData, onUploadProgress) => {
   try {
     const response = await fetch(`${API_BASE_URL}/courses`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(courseData),
+      body: formData, // Don't set Content-Type header, let the browser set it with the correct boundary
     });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
     
     return await response.json();
@@ -270,6 +268,53 @@ export const createContent = async (contentData) => {
     return await response.json();
   } catch (error) {
     console.error('Error creating content:', error);
+    throw error;
+  }
+};
+// Teacher Assignment API functions
+export const getTeacherAssignments = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/teacher-assignments`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching teacher assignments:', error);
+    throw error;
+  }
+};
+
+export const assignTeacherToSubject = async (teacherId, subjectId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/teacher-assignments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ teacherId, subjectId }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error assigning teacher:', error);
+    throw error;
+  }
+};
+
+export const deleteTeacherAssignment = async (assignmentId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/teacher-assignments/${assignmentId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error deleting teacher assignment:', error);
     throw error;
   }
 };
