@@ -1,18 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './LoginPage.css';
+import { loginUser } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
-const LoginPage = ({ onLogin, onBack }) => {
+const LoginPage = ({ onBack }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login form submitted with:', { username, password });
-    // Simple validation - in a real app, you would authenticate against a server
-    if (username && password) {
-      onLogin(username, password);
-    } else {
-      alert('Please enter both username and password');
+    setError('');
+    
+    if (!username || !password) {
+      setError('Please enter both username and password');
+      return;
+    }
+
+    try {
+      const response = await loginUser({ username, password });
+      
+      if (response.token) {
+        // Store token in localStorage
+        localStorage.setItem('token', response.token);
+        
+        // Store user data in context
+        login({
+          id: response.user.id,
+          username: response.user.username,
+          role: response.user.role || 'student', // Default to 'student' if role not provided
+          name: response.user.name || username
+        }, response.token);
+        
+        // Redirect based on role
+        if (response.user.role === 'admin' || response.user.role === 'superadmin') {
+          navigate('/admin/dashboard');
+        } else if (response.user.role === 'teacher') {
+          navigate('/teacher/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        setError('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message || 'Login failed. Please try again.');
     }
   };
 
@@ -41,12 +77,8 @@ const LoginPage = ({ onLogin, onBack }) => {
               placeholder="Enter password"
             />
           </div>
-          <button type="submit" className="login-button">
-            Login
-          </button>
-          <button type="button" className="back-button" onClick={onBack}>
-            Back
-          </button>
+          <button type="submit" className="login-button">Login</button>
+          <button type="button" className="back-button" onClick={onBack}>Back</button>
         </form>
       </div>
     </div>

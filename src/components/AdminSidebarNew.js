@@ -15,11 +15,11 @@ const AdminSidebarNew = ({ onToggle }) => {
   const menuItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: faHome },
     { name: 'User Management', path: '/admin/user-management', icon: faUsers },
-    { name: 'Academic Content', path: '/admin/academic-content', icon: faBook },
-    { name: 'Reports & Tracking', path: '/admin/reports-tracking', icon: faChartLine },
-    { name: 'Analytics', path: '/admin/analytics', icon: faSearch },
+    { name: 'Academic Content', path: '/admin/academic-content-control  ', icon: faBook },
+    { name: 'Reports & Tracking', path: '/admin/reports-tracking-scheduling', icon: faChartLine },
+    { name: 'Analytics', path: '/admin/analytics-insights', icon: faSearch },
     { name: 'Communication', path: '/admin/communication', icon: faComments },
-    { name: 'AI Tools', path: '/admin/ai-tools', icon: faRobot },
+    { name: 'AI Tools', path: '/admin/ai-support-tools', icon: faRobot },
     { name: 'Profile', path: '/admin/profile', icon: faUser },
     { name: 'Feedback', path: '/admin/feedback', icon: faComment }
   ];

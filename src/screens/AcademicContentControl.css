@@ -162,19 +162,159 @@ tr:hover {
   transition: background-color 0.3s ease;
 }
 
-.action-button.table-action {
-  padding: 8px 15px;
-  margin-right: 8px;
-  font-size: 13px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+/* Action buttons in table */
+.action-buttons {
+  padding: 5px 0;
 }
 
-.action-button.table-action:nth-child(1) {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+.button-group, .admin-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
-.action-button.table-action:nth-child(2) {
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+.table-action {
+  min-width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  padding: 0 10px;
+  margin: 0 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-action i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Button colors and hover effects */
+.view-button {
+  background-color: #3498db;
+}
+
+.view-button:hover {
+  background-color: #2980b9;
+  transform: scale(1.1);
+}
+
+.edit-button {
+  background-color: #f39c12;
+}
+
+.edit-button:hover {
+  background-color: #d68910;
+  transform: scale(1.1);
+}
+
+.approve-button {
+  background-color: #2ecc71;
+}
+
+.approve-button:hover:not(:disabled) {
+  background-color: #27ae60;
+  transform: scale(1.1);
+}
+
+.approve-button.active {
+  background-color: #27ae60;
+  border-radius: 16px;
+  padding: 0 12px;
+}
+
+.reject-button {
+  background-color: #e74c3c;
+}
+
+.reject-button:hover:not(:disabled) {
+  background-color: #c0392b;
+  transform: scale(1.1);
+}
+
+.reject-button.active {
+  background-color: #c0392b;
+  border-radius: 16px;
+  padding: 0 12px;
+}
+
+.action-text {
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Status badge for non-admin users */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.table-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Tooltip styles */
+[title] {
+  position: relative;
+}
+
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 5px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+[title]:hover::after {
+  opacity: 1;
 }
 /* Add Content Form Styles */
 .add-content-form {
@@ -222,4 +362,43 @@ tr:hover {
   border-color: #00b4db;
   box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.2);
   background-color: white;
+}
+/* Table Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-icon {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+/* Specific Button Colors */
+.view-button {
+  color: #3498db;
+}
+.view-button:hover {
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.edit-button {
+  color: #f39c12;
+}
+.edit-button:hover {
+  background: rgba(243, 156, 18, 0.1);
+}
+
+/* These styles are now handled in the .table-action section above */
+
+.reject-button {
+  color: #e74c3c;
+}
+.reject-button:hover {
+  background: rgba(231, 76, 60, 0.1);
 }

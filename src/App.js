@@ -18,6 +18,8 @@ import Dashboard from './screens/Dashboard';
 import UserManagement from './screens/UserManagement';
 import RolePermissionManagement from './screens/RolePermissionManagement';
 import AcademicContentControl from './screens/AcademicContentControl';
+import ViewContent from './screens/ViewContent';
+import EditContent from './screens/EditContent';
 import ReportsTrackingScheduling from './screens/ReportsTrackingScheduling';
 import AnalyticsInsights from './screens/AnalyticsInsights';
 import Communication from './screens/Communication';
@@ -236,6 +238,8 @@ function AppContent() {
           <Route path="/admin/user-management" element={<RouteGuard allowedRoles={["admin"]}><UserManagement /></RouteGuard>} />
           <Route path="/admin/role-permission-management" element={<RouteGuard allowedRoles={["admin"]}><RolePermissionManagement /></RouteGuard>} />
           <Route path="/admin/academic-content-control" element={<RouteGuard allowedRoles={["admin"]}><AcademicContentControl /></RouteGuard>} />
+          <Route path="/content/:id" element={<RouteGuard allowedRoles={["admin", "teacher"]}><ViewContent /></RouteGuard>} />
+          <Route path="/edit-content/:id" element={<RouteGuard allowedRoles={["admin", "teacher"]}><EditContent /></RouteGuard>} />
           <Route path="/admin/course-management" element={<RouteGuard allowedRoles={["admin"]}><CourseManagement /></RouteGuard>} />
           <Route path="/admin/reports-tracking-scheduling" element={<RouteGuard allowedRoles={["admin"]}><ReportsTrackingScheduling /></RouteGuard>} />
           <Route path="/admin/analytics-insights" element={<RouteGuard allowedRoles={["admin"]}><AnalyticsInsights /></RouteGuard>} />

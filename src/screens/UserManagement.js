@@ -137,7 +137,7 @@ const UserManagement = () => {
         </button>
         <button 
           className="secondary-button" 
-          onClick={() => navigate('/teacher-assignments')}
+          onClick={() => navigate('/admin/teacher-assignments')}
         >
           Assign Teachers to Subjects
         </button>

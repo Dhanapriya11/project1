@@ -1,320 +1,134 @@
-const API_BASE_URL = 'http://localhost:5001/api';
+// api.js
+const API_URL = "http://localhost:5001/api";
 
-// User API functions
-export const getUsers = async () => {
-  console.log('Fetching users from API');
-  try {
-    const response = await fetch(`${API_BASE_URL}/users`);
-    console.log('Get users API response status:', response.status);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('Get users API error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-    const data = await response.json();
-    console.log('Get users API response data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
+// ✅ Helper to include auth token in headers
+const fetchWithAuth = async (url, options = {}) => {
+  const token = localStorage.getItem("token");
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}), // attach token if found
+    ...options.headers,
+  };
+
+  const response = await fetch(`${API_URL}${url}`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Request failed: ${response.status}`);
   }
+
+  return response.json();
 };
 
-export const createUser = async (userData) => {
-  console.log('Create user API call with data:', userData);
-  try {
-    const response = await fetch(`${API_BASE_URL}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-    
-    console.log('Create user API response status:', response.status);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('Create user API error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Create user API response data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error creating user:', error);
-    throw error;
+// ✅ LOGIN
+export const loginUser = async ({ username, password }) => {
+  const res = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!res.ok) {
+    const message = await res.text();
+    throw new Error(message || "Login failed");
   }
+
+  return res.json(); // { token, user }
 };
 
-export const updateUser = async (userId, userData) => {
-  console.log('Update user API call with data:', { userId, userData });
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-    
-    console.log('Update user API response status:', response.status);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('Update user API error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Update user API response data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error updating user:', error);
-    throw error;
-  }
-};
+// ✅ USERS
+export const getUsers = () => fetchWithAuth("/users");
+export const createUser = (userData) =>
+  fetchWithAuth("/users", {
+    method: "POST",
+    body: JSON.stringify(userData),
+  });
+export const deleteUser = (id) =>
+  fetchWithAuth(`/users/${id}`, { method: "DELETE" });
 
-export const deleteUser = async (userId) => {
-  console.log('Delete user API call for user ID:', userId);
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: 'DELETE',
-    });
-    
-    console.log('Delete user API response status:', response.status);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('Delete user API error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Delete user API response data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    throw error;
-  }
-};
+// ✅ COURSES
+export const getCourses = () => fetchWithAuth("/courses");
+export const createCourse = (courseData) =>
+  fetchWithAuth("/courses", {
+    method: "POST",
+    body: JSON.stringify(courseData),
+  });
 
-// Login API function
-export const loginUser = async (credentials) => {
-  console.log('Login API call with credentials:', credentials);
-  try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
-    
-    console.log('Login API response status:', response.status);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('Login API error response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    console.log('Login API response data:', data);
-    return data;
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error;
-  }
-};
 
-// Course API functions
-export const getCourses = async () => {
-  const url = `${API_BASE_URL}/courses`;
-  console.log('Fetching courses from:', url);
+// ✅ TEACHER ASSIGNMENTS
+export const getTeacherAssignments = () => fetchWithAuth("/teacher-assignments");
+export const createTeacherAssignment = (assignmentData) =>
+  fetchWithAuth("/teacher-assignments", {
+    method: "POST",
+    body: JSON.stringify(assignmentData),
+  });
+export const deleteTeacherAssignment = (id) =>
+  fetchWithAuth(`/teacher-assignments/${id}`, { method: "DELETE" });
+// api.js (continuation from previous version)
+
+// ✅ get current logged-in user
+export const getCurrentUser = () => fetchWithAuth("/users/me");
+
+// ✅ update user
+export const updateUser = (id, updates) =>
+  fetchWithAuth(`/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updates),
+  });
+
+// ✅ alias for backward compatibility
+export const assignTeacherToSubject = createTeacherAssignment;
+// ==========================
+// ✅ CONTENT
+// ==========================
+export const getContent = () => fetchWithAuth("/content");
+
+export const getContentById = (id) => fetchWithAuth(`/content/${id}`);
+
+export const createContent = (contentData) =>
+  fetchWithAuth("/content", {
+    method: "POST",
+    body: JSON.stringify(contentData),
+  });
+
+export const updateContent = async (id, contentData) => {
+  // If contentData is FormData, we don't need to stringify it
+  const isFormData = contentData instanceof FormData;
   
-  try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-    
-    console.log('Courses API response status:', response.status);
-    
-    if (!response.ok) {
-      let errorText;
-      try {
-        errorText = await response.text();
-        // Try to parse as JSON in case it's a JSON error response
-        const errorJson = JSON.parse(errorText);
-        console.error('Courses API error (JSON):', errorJson);
-        throw new Error(errorJson.message || `HTTP error! status: ${response.status}`);
-      } catch (e) {
-        console.error('Courses API error (text):', errorText || 'No error details');
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText || 'Unknown error'}`);
-      }
-    }
-    
-    let data;
-    try {
-      data = await response.json();
-      console.log('Courses API response data:', data);
-      
-      // The backend returns the courses array directly
-      if (Array.isArray(data)) {
-        console.log(`Received ${data.length} courses from API`);
-        return data;
-      } else if (data && Array.isArray(data.value)) {
-        console.log(`Received ${data.value.length} courses from API (nested in value)`);
-        return data.value;
-      } else {
-        console.warn('Unexpected courses data format, returning empty array. Data:', data);
-        return [];
-      }
-    } catch (jsonError) {
-      console.error('Error parsing JSON response:', jsonError);
-      throw new Error('Failed to parse courses data');
-    }
-  } catch (error) {
-    console.error('Error fetching courses:', error);
-    throw error;
+  const options = {
+    method: 'PUT',
+  };
+  
+  if (isFormData) {
+    // For FormData, let the browser set the Content-Type header with the correct boundary
+    options.body = contentData;
+  } else {
+    // For regular JSON data, set the Content-Type header and stringify the body
+    options.headers = {
+      'Content-Type': 'application/json',
+    };
+    options.body = JSON.stringify(contentData);
   }
+  
+  return fetchWithAuth(`/content/${id}`, options);
 };
 
-export const createCourse = async (formData, onUploadProgress) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/courses`, {
-      method: 'POST',
-      body: formData, // Don't set Content-Type header, let the browser set it with the correct boundary
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error creating course:', error);
-    throw error;
-  }
-};
+// ==========================
+// ✅ CONTENT MODERATION
+// (Admin / Superadmin only)
+// ==========================
+export const getPendingContent = () => fetchWithAuth("/content/pending");
 
-// User Profile API functions
-export const getCurrentUser = async () => {
-  try {
-    const userData = localStorage.getItem('currentUser');
-    if (!userData) {
-      throw new Error('No user data found');
-    }
-    
-    // Parse the user data from localStorage
-    const user = JSON.parse(userData);
-    
-    // If you need to fetch fresh data, use the ID to get user details
-    // For now, we'll return the stored user data
-    return user;
-  } catch (error) {
-    console.error('Error fetching current user:', error);
-    throw error;
-  }
-};
+export const reviewContent = (id, status) =>
+  fetchWithAuth(`/content/${id}/review`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }), // "approved" or "rejected"
+  });
 
-export const updateCurrentUser = async (userData) => {
-  try {
-    // In a real app, you would send this to your backend
-    // For now, we'll update the user data in localStorage
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const updatedUser = { ...currentUser, ...userData };
-    
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    
-    return updatedUser;
-  } catch (error) {
-    console.error('Error updating current user:', error);
-    throw error;
-  }
-};
+export const approveContent = (id) => reviewContent(id, "approved");
 
-// Content API functions
-export const getContent = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/content`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching content:', error);
-    throw error;
-  }
-};
-
-export const createContent = async (contentData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/content`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contentData),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error creating content:', error);
-    throw error;
-  }
-};
-// Teacher Assignment API functions
-export const getTeacherAssignments = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/teacher-assignments`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching teacher assignments:', error);
-    throw error;
-  }
-};
-
-export const assignTeacherToSubject = async (teacherId, subjectId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/teacher-assignments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ teacherId, subjectId }),
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error assigning teacher:', error);
-    throw error;
-  }
-};
-
-export const deleteTeacherAssignment = async (assignmentId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/teacher-assignments/${assignmentId}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error deleting teacher assignment:', error);
-    throw error;
-  }
-};
+export const rejectContent = (id) => reviewContent(id, "rejected");
