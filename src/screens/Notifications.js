@@ -1,9 +1,9 @@
 
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Badge, List, Tabs, Button, Tag, Dropdown, Menu } from 'antd';
-import { 
-  BellOutlined, 
+import {
+  BellOutlined,
   CheckOutlined,
   ExclamationCircleOutlined,
   NotificationOutlined,
@@ -52,7 +52,7 @@ const mockNotifications = {
       time: 'Yesterday',
       type: 'deadline',
       read: true,
-      meta: { subject: 'Mathematics', due: '2023-06-30' }
+      meta: { subject: 'Mathematics', due: '2025-06-30' }
     }
   ]
 };
@@ -64,11 +64,11 @@ mockNotifications.unread = mockNotifications.all.filter(n => !n.read);
 const Notifications = ({ isWidget = false, teacherNotifications }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [notifications, setNotifications] = useState(
-    teacherNotifications && teacherNotifications.length > 0 
+    teacherNotifications && teacherNotifications.length > 0
       ? { all: teacherNotifications, unread: teacherNotifications.filter(n => !n.read) }
       : mockNotifications
   );
-  
+
   // Update notifications when teacherNotifications prop changes
   useEffect(() => {
     if (teacherNotifications && teacherNotifications.length > 0) {
@@ -79,18 +79,18 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
     }
   }, [teacherNotifications]);
 
-  
+
   // Mark notification as read
   const markAsRead = (id) => {
     const updatedNotifications = { ...notifications };
     Object.keys(updatedNotifications).forEach(key => {
-      updatedNotifications[key] = updatedNotifications[key].map(notification => 
+      updatedNotifications[key] = updatedNotifications[key].map(notification =>
         notification.id === id ? { ...notification, read: true } : notification
       );
     });
     setNotifications(updatedNotifications);
   };
-  
+
   // Mark all as read
   const markAllAsRead = () => {
     const updatedNotifications = { ...notifications };
@@ -102,10 +102,10 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
     });
     setNotifications(updatedNotifications);
   };
-  
+
   // Filter notifications based on tab
   const filteredNotifications = notifications[activeTab] || [];
-  
+
   // Get unread count
   const unreadCount = notifications.all.filter(n => !n.read).length;
 
@@ -113,7 +113,7 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
   const renderNotificationItem = (item) => {
     // Get appropriate icon based on notification type
     const getNotificationIcon = () => {
-      switch(item.type) {
+      switch (item.type) {
         case 'submission':
           return <FileOutlined style={{ color: '#1890ff' }} />;
         case 'announcement':
@@ -127,7 +127,7 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
           return <NotificationOutlined style={{ color: '#52c41a' }} />;
       }
     };
-    
+
     return (
       <List.Item
         key={item.id}
@@ -191,8 +191,8 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
       <div className="notifications-header">
         <h2>Notifications</h2>
         <div>
-          <Button 
-            type="text" 
+          <Button
+            type="text"
             icon={<CheckOutlined />}
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
@@ -201,8 +201,8 @@ const Notifications = ({ isWidget = false, teacherNotifications }) => {
           </Button>
         </div>
       </div>
-      
-      <Tabs 
+
+      <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
         tabBarExtraContent={{

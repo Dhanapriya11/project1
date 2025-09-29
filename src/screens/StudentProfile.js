@@ -1,295 +1,469 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUser, updateUser } from '../services/api';
-import './StudentProfile.css';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  User, Mail, Phone, MapPin, Calendar,
+  Edit, Save, X, Camera, Award, BookOpen,
+  Settings, Shield, Bell, Globe, Lock
+} from 'lucide-react';
+import { Card, Button, Badge, Input } from '../components/ui/PremiumComponents';
+import { useTheme } from '../contexts/PremiumContexts';
+import StudentPageWrapper from '../components/StudentPageWrapper';
 
 const StudentProfile = () => {
+  const { theme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    grade: '',
-    section: '',
-    rollNumber: '',
-    parentName: '',
-    parentEmail: '',
-    parentPhone: ''
+  const [activeTab, setActiveTab] = useState('personal');
+
+  const [profileData, setProfileData] = useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@student.edu',
+    phone: '+1 (555) 123-4567',
+    address: '123 University Ave, Campus City, ST 12345',
+    dateOfBirth: '2000-05-15',
+    studentId: 'STU2024001',
+    major: 'Computer Science',
+    year: 'Junior',
+    gpa: 3.7,
+    avatar: '👨‍🎓',
+    bio: 'Passionate computer science student with a focus on software development and artificial intelligence.',
+    interests: ['Programming', 'Machine Learning', 'Web Development', 'Data Science'],
+    achievements: [
+      { title: 'Dean\'s List', semester: 'Fall 2025', description: 'Maintained GPA above 3.5' },
+      { title: 'Programming Competition', semester: 'Spring 2025', description: '2nd Place in University Hackathon' },
+      { title: 'Research Assistant', semester: 'Summer 2025', description: 'AI Research Project' }
+    ]
   });
-  const [courses, setCourses] = useState([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    // Fetch user data when component mounts
-    const fetchUserData = async () => {
-      try {
-        const userData = await getCurrentUser();
-        setFormData({
-          name: userData.name || '',
-          email: userData.email || '',
-          phone: userData.phone || '',
-          address: userData.address || '',
-          grade: userData.grade || '',
-          section: userData.section || '',
-          rollNumber: userData.rollNumber || '',
-          parentName: userData.parentName || '',
-          parentEmail: userData.parentEmail || '',
-          parentPhone: userData.parentPhone || ''
-        });
-        setCourses(userData.enrolledCourses || []);
-      } catch (err) {
-        setError('Failed to load profile data');
-        console.error('Error fetching user data:', err);
-      }
-    };
+  const [editData, setEditData] = useState(profileData);
 
-    fetchUserData();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    
-    // Basic validation
-    if (!formData.name || !formData.email) {
-      setError('Name and email are required');
-      return;
-    }
-
-    try {
-      await updateUser(formData);
-      setSuccess('Profile updated successfully!');
-      setIsEditing(false);
-      // Refresh user data
-      const updatedUser = await getCurrentUser();
-      setFormData(updatedUser);
-    } catch (err) {
-      setError('Failed to update profile');
-      console.error('Update error:', err);
-    }
+  const handleSave = () => {
+    setProfileData(editData);
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
+    setEditData(profileData);
     setIsEditing(false);
-    // Reset form to original data
-    getCurrentUser().then(userData => {
-      setFormData(userData);
-    });
+  };
+
+  const tabs = [
+    { id: 'personal', label: 'Personal Info', icon: User },
+    { id: 'academic', label: 'Academic', icon: BookOpen },
+    { id: 'achievements', label: 'Achievements', icon: Award },
+    { id: 'settings', label: 'Settings', icon: Settings }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    }
   };
 
   return (
-    <div className="student-profile">
-      <div className="profile-header">
-        <h2>Student Profile</h2>
-        {!isEditing && (
-          <button 
-            className="edit-button"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Profile
-          </button>
-        )}
-      </div>
-
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-
-      <div className="profile-container">
-        <div className="profile-section">
-          <div className="profile-picture">
-            <img 
-              src={formData.photoUrl || '/default-avatar.png'} 
-              alt="Profile" 
-              className="profile-avatar"
-            />
-            {isEditing && (
-              <button className="change-photo-btn">
-                Change Photo
-              </button>
-            )}
-          </div>
-          
-          <div className="profile-info">
-            {isEditing ? (
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Phone</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Address</label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    rows="3"
-                  />
-                </div>
-
-                <h3>Academic Information</h3>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Grade</label>
-                    <input
-                      type="text"
-                      name="grade"
-                      value={formData.grade}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Section</label>
-                    <input
-                      type="text"
-                      name="section"
-                      value={formData.section}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Roll Number</label>
-                    <input
-                      type="text"
-                      name="rollNumber"
-                      value={formData.rollNumber}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <h3>Parent/Guardian Information</h3>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Parent Name</label>
-                    <input
-                      type="text"
-                      name="parentName"
-                      value={formData.parentName}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Parent Email</label>
-                    <input
-                      type="email"
-                      name="parentEmail"
-                      value={formData.parentEmail}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Parent Phone</label>
-                    <input
-                      type="tel"
-                      name="parentPhone"
-                      value={formData.parentPhone}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-actions">
-                  <button type="button" className="cancel-button" onClick={handleCancel}>
-                    Cancel
-                  </button>
-                  <button type="submit" className="save-button">
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <div className="info-group">
-                  <h3>Personal Information</h3>
-                  <p><strong>Name:</strong> {formData.name}</p>
-                  <p><strong>Email:</strong> {formData.email}</p>
-                  <p><strong>Phone:</strong> {formData.phone || 'Not provided'}</p>
-                  <p><strong>Address:</strong> {formData.address || 'Not provided'}</p>
-                </div>
-
-                <div className="info-group">
-                  <h3>Academic Information</h3>
-                  <p><strong>Grade:</strong> {formData.grade || 'N/A'}</p>
-                  <p><strong>Section:</strong> {formData.section || 'N/A'}</p>
-                  <p><strong>Roll Number:</strong> {formData.rollNumber || 'N/A'}</p>
-                </div>
-
-                <div className="info-group">
-                  <h3>Parent/Guardian Information</h3>
-                  <p><strong>Name:</strong> {formData.parentName || 'Not provided'}</p>
-                  <p><strong>Email:</strong> {formData.parentEmail || 'Not provided'}</p>
-                  <p><strong>Phone:</strong> {formData.parentPhone || 'Not provided'}</p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="courses-section">
-          <h3>Enrolled Courses</h3>
-          {courses.length > 0 ? (
-            <div className="course-list">
-              {courses.map((course, index) => (
-                <div key={index} className="course-card">
-                  <h4>{course.name}</h4>
-                  <p>Instructor: {course.instructor}</p>
-                  <p>Schedule: {course.schedule}</p>
-                  <button 
-                    className="view-course-btn"
-                    onClick={() => navigate(`/courses/${course.id}`)}
-                  >
-                    View Course
-                  </button>
-                </div>
-              ))}
+    <StudentPageWrapper>
+      <motion.div
+        className="p-6 lg:p-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Header */}
+        <motion.header className="mb-8" variants={itemVariants}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                My Profile 👤
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                Manage your personal information and academic details
+              </p>
             </div>
-          ) : (
-            <p>No courses enrolled yet.</p>
-          )}
+            <div className="flex items-center gap-3">
+              {isEditing ? (
+                <>
+                  <Button variant="ghost" onClick={handleCancel}>
+                    <X className="w-4 h-4 mr-2" />
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleSave}>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </Button>
+                </>
+              ) : (
+                <Button variant="primary" onClick={() => setIsEditing(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit Profile
+                </Button>
+              )}
+            </div>
+          </div>
+        </motion.header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Profile Sidebar */}
+          <motion.section className="lg:col-span-1" variants={itemVariants}>
+            <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+              <div className="text-center mb-6">
+                <div className="relative inline-block">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl mb-4">
+                    {profileData.avatar}
+                  </div>
+                  {isEditing && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-lg"
+                    >
+                      <Camera className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  {profileData.firstName} {profileData.lastName}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {profileData.major} • {profileData.year}
+                </p>
+                <Badge variant="success" className="mt-2">
+                  Student ID: {profileData.studentId}
+                </Badge>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">GPA</span>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {profileData.gpa}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Year</span>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {profileData.year}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Major</span>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {profileData.major}
+                  </span>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <div className="space-y-2">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all duration-200 ${activeTab === tab.id
+                      ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                      }`}
+                  >
+                    <tab.icon className="w-4 h-4" />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </Card>
+          </motion.section>
+
+          {/* Main Content */}
+          <motion.section className="lg:col-span-3" variants={itemVariants}>
+            {activeTab === 'personal' && (
+              <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      First Name
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        value={editData.firstName}
+                        onChange={(e) => setEditData({ ...editData, firstName: e.target.value })}
+                        placeholder="First Name"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.firstName}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Last Name
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        value={editData.lastName}
+                        onChange={(e) => setEditData({ ...editData, lastName: e.target.value })}
+                        placeholder="Last Name"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.lastName}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Email
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        type="email"
+                        value={editData.email}
+                        onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                        placeholder="Email"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Phone
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        value={editData.phone}
+                        onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+                        placeholder="Phone"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.phone}</p>
+                    )}
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Address
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        value={editData.address}
+                        onChange={(e) => setEditData({ ...editData, address: e.target.value })}
+                        placeholder="Address"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.address}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Date of Birth
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        type="date"
+                        value={editData.dateOfBirth}
+                        onChange={(e) => setEditData({ ...editData, dateOfBirth: e.target.value })}
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">
+                        {new Date(profileData.dateOfBirth).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Bio
+                    </label>
+                    {isEditing ? (
+                      <textarea
+                        value={editData.bio}
+                        onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                        placeholder="Tell us about yourself..."
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                        rows={3}
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.bio}</p>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {activeTab === 'academic' && (
+              <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Academic Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Student ID
+                    </label>
+                    <p className="text-gray-900 dark:text-white">{profileData.studentId}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Major
+                    </label>
+                    {isEditing ? (
+                      <Input
+                        value={editData.major}
+                        onChange={(e) => setEditData({ ...editData, major: e.target.value })}
+                        placeholder="Major"
+                      />
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.major}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Year
+                    </label>
+                    {isEditing ? (
+                      <select
+                        value={editData.year}
+                        onChange={(e) => setEditData({ ...editData, year: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      >
+                        <option value="Freshman">Freshman</option>
+                        <option value="Sophomore">Sophomore</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Senior">Senior</option>
+                        <option value="Graduate">Graduate</option>
+                      </select>
+                    ) : (
+                      <p className="text-gray-900 dark:text-white">{profileData.year}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Current GPA
+                    </label>
+                    <p className="text-gray-900 dark:text-white">{profileData.gpa}</p>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Interests
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {profileData.interests.map((interest, index) => (
+                      <Badge key={index} variant="secondary">
+                        {interest}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {activeTab === 'achievements' && (
+              <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Achievements & Awards
+                </h3>
+                <div className="space-y-4">
+                  {profileData.achievements.map((achievement, index) => (
+                    <motion.div
+                      key={index}
+                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-all duration-200"
+                      whileHover={{ scale: 1.01 }}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-orange-600 flex items-center justify-center text-white">
+                          <Award className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {achievement.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            {achievement.semester}
+                          </p>
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {achievement.description}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {activeTab === 'settings' && (
+              <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Account Settings
+                </h3>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">Email Notifications</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Receive updates about assignments and grades</p>
+                      </div>
+                    </div>
+                    <Button variant="primary" size="sm">Enable</Button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Shield className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">Two-Factor Authentication</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your account</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm">Setup</Button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">Privacy Settings</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Control who can see your profile information</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm">Manage</Button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Lock className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">Change Password</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Update your account password</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm">Change</Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </motion.section>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </StudentPageWrapper>
   );
 };
 

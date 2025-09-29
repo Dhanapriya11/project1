@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faHome, faUsers, faLock, faBook, faChartLine, 
-  faSearch, faComments, faRobot, faUniversalAccess, 
+import {
+  faHome, faUsers, faLock, faBook, faChartLine,
+  faSearch, faComments, faRobot, faUniversalAccess,
   faShieldAlt, faUser, faComment, faBars, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
@@ -11,7 +11,7 @@ import './Sidebar.css';
 const Sidebar = ({ onToggle }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
-  
+
   const menuItems = [
     { name: 'Dashboard', path: '/super-admin-dashboard', icon: faHome },
     { name: 'User Management', path: '/user-management', icon: faUsers },
@@ -56,8 +56,8 @@ const Sidebar = ({ onToggle }) => {
           <ul>
             {menuItems.map((item, index) => (
               <li key={index}>
-                <Link 
-                  to={item.path} 
+                <Link
+                  to={item.path}
                   className={location.pathname === item.path ? 'active' : ''}
                 >
                   <FontAwesomeIcon icon={item.icon} className="menu-icon" />
@@ -69,7 +69,7 @@ const Sidebar = ({ onToggle }) => {
         </nav>
         {isSidebarOpen && (
           <div className="sidebar-footer">
-            <p>© 2023 LMS Admin Panel</p>
+            <p>© 2025 LMS Admin Panel</p>
           </div>
         )}
       </div>

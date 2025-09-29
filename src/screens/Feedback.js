@@ -33,7 +33,7 @@ const Feedback = () => {
     <div className="feedback">
       <h1>Feedback</h1>
       <p>Collect LMS feedback from users</p>
-      
+
       <div className="feedback-section">
         <h2>Submit Feedback</h2>
         <form onSubmit={handleSubmit}>
@@ -48,7 +48,7 @@ const Feedback = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -60,7 +60,7 @@ const Feedback = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="subject">Subject</label>
             <input
@@ -72,7 +72,7 @@ const Feedback = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="message">Message</label>
             <textarea
@@ -84,11 +84,11 @@ const Feedback = () => {
               required
             ></textarea>
           </div>
-          
+
           <button type="submit" className="primary-button">Submit Feedback</button>
         </form>
       </div>
-      
+
       <div className="feedback-table">
         <h2>Recent Feedback</h2>
         <table>
@@ -105,7 +105,7 @@ const Feedback = () => {
             <tr>
               <td>John Doe</td>
               <td>UI Improvement Suggestions</td>
-              <td>2023-05-15</td>
+              <td>2025-05-15</td>
               <td>Open</td>
               <td>
                 <button className="action-button">View</button>
@@ -115,7 +115,7 @@ const Feedback = () => {
             <tr>
               <td>Jane Smith</td>
               <td>Feature Request</td>
-              <td>2023-05-14</td>
+              <td>2025-05-14</td>
               <td>Resolved</td>
               <td>
                 <button className="action-button">View</button>

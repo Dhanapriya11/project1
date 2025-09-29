@@ -15,7 +15,7 @@ const mockHomework = [
     title: 'Math Chapter 5 Exercises',
     subject: 'Mathematics',
     description: 'Complete exercises 1-10 from Chapter 5',
-    dueDate: '2023-06-20',
+    dueDate: '2025-06-20',
     status: 'pending',
     priority: 'high'
   },
@@ -24,7 +24,7 @@ const mockHomework = [
     title: 'Science Project',
     subject: 'Science',
     description: 'Work on the science fair project',
-    dueDate: '2023-06-25',
+    dueDate: '2025-06-25',
     status: 'pending',
     priority: 'medium'
   },
@@ -33,7 +33,7 @@ const mockHomework = [
     title: 'History Essay',
     subject: 'History',
     description: 'Write a 1000-word essay on World War II',
-    dueDate: '2023-06-15',
+    dueDate: '2025-06-15',
     status: 'completed',
     priority: 'high'
   }
@@ -54,7 +54,7 @@ const HomeworkReminders = () => {
     }, 500);
   }, []);
 
-  const filteredHomework = homework.filter(hw => 
+  const filteredHomework = homework.filter(hw =>
     activeTab === 'all' ? true : hw.status === activeTab
   );
 
@@ -70,16 +70,16 @@ const HomeworkReminders = () => {
       status: 'pending',
       dueDate: values.dueDate.format('YYYY-MM-DD')
     };
-    
+
     setHomework([...homework, newHomework]);
     setIsModalVisible(false);
     form.resetFields();
   };
 
   const toggleStatus = (id) => {
-    setHomework(homework.map(hw => 
-      hw.id === id 
-        ? { ...hw, status: hw.status === 'completed' ? 'pending' : 'completed' } 
+    setHomework(homework.map(hw =>
+      hw.id === id
+        ? { ...hw, status: hw.status === 'completed' ? 'pending' : 'completed' }
         : hw
     ));
   };
@@ -90,8 +90,8 @@ const HomeworkReminders = () => {
   };
 
   const isOverdue = (dueDate) => {
-    return moment(dueDate).isBefore(moment(), 'day') && 
-           !homework.find(hw => hw.dueDate === dueDate)?.status === 'completed';
+    return moment(dueDate).isBefore(moment(), 'day') &&
+      !homework.find(hw => hw.dueDate === dueDate)?.status === 'completed';
   };
 
   return (
@@ -104,7 +104,7 @@ const HomeworkReminders = () => {
       </div>
 
       <Tabs activeKey={activeTab} onChange={setActiveTab} className="homework-tabs">
-        <TabPane 
+        <TabPane
           tab={
             <span>
               <ClockCircleOutlined />
@@ -113,7 +113,7 @@ const HomeworkReminders = () => {
                 {homework.filter(hw => hw.status === 'pending').length}
               </span>
             </span>
-          } 
+          }
           key="pending"
         >
           <List
@@ -124,9 +124,9 @@ const HomeworkReminders = () => {
               <List.Item
                 className={`homework-item ${isOverdue(item.dueDate) ? 'overdue' : ''}`}
                 actions={[
-                  <Button 
-                    type="link" 
-                    icon={<CheckCircleOutlined />} 
+                  <Button
+                    type="link"
+                    icon={<CheckCircleOutlined />}
                     onClick={() => toggleStatus(item.id)}
                   >
                     Mark Complete
@@ -158,8 +158,8 @@ const HomeworkReminders = () => {
             )}
           />
         </TabPane>
-        
-        <TabPane 
+
+        <TabPane
           tab={
             <span>
               <CheckCircleOutlined />
@@ -168,7 +168,7 @@ const HomeworkReminders = () => {
                 {homework.filter(hw => hw.status === 'completed').length}
               </span>
             </span>
-          } 
+          }
           key="completed"
         >
           <List
@@ -202,7 +202,7 @@ const HomeworkReminders = () => {
           >
             <Input placeholder="Enter homework title" />
           </Form.Item>
-          
+
           <Form.Item
             name="subject"
             label="Subject"
@@ -215,7 +215,7 @@ const HomeworkReminders = () => {
               <Option value="English">English</Option>
             </Select>
           </Form.Item>
-          
+
           <Form.Item
             name="description"
             label="Description"
@@ -223,7 +223,7 @@ const HomeworkReminders = () => {
           >
             <TextArea rows={4} placeholder="Enter homework details" />
           </Form.Item>
-          
+
           <Form.Item
             name="dueDate"
             label="Due Date"
@@ -231,7 +231,7 @@ const HomeworkReminders = () => {
           >
             <DatePicker style={{ width: '100%' }} />
           </Form.Item>
-          
+
           <Form.Item
             name="priority"
             label="Priority"

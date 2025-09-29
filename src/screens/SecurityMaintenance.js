@@ -6,12 +6,12 @@ const SecurityMaintenance = () => {
     <div className="security-maintenance">
       <h1>Security & Maintenance</h1>
       <p>Manage system security and maintenance tasks</p>
-      
+
       <div className="security-actions">
         <button className="primary-button">View Audit Logs</button>
         <button className="secondary-button">Backup System</button>
       </div>
-      
+
       <div className="security-sections">
         <div className="section">
           <h2>Audit Log</h2>
@@ -20,7 +20,7 @@ const SecurityMaintenance = () => {
             <button className="action-button">View Logs</button>
           </div>
         </div>
-        
+
         <div className="section">
           <h2>Backup/Restore</h2>
           <div className="section-content">
@@ -28,7 +28,7 @@ const SecurityMaintenance = () => {
             <button className="action-button">Manage Backups</button>
           </div>
         </div>
-        
+
         <div className="section">
           <h2>System Health Monitor</h2>
           <div className="section-content">
@@ -37,7 +37,7 @@ const SecurityMaintenance = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="security-table">
         <h2>Recent Security Events</h2>
         <table>
@@ -55,14 +55,14 @@ const SecurityMaintenance = () => {
               <td>Login</td>
               <td>admin</td>
               <td>192.168.1.100</td>
-              <td>2023-05-15 14:30</td>
+              <td>2025-05-15 14:30</td>
               <td>Success</td>
             </tr>
             <tr>
               <td>Failed Login</td>
               <td>unknown</td>
               <td>192.168.1.105</td>
-              <td>2023-05-15 10:15</td>
+              <td>2025-05-15 10:15</td>
               <td>Failed</td>
             </tr>
           </tbody>

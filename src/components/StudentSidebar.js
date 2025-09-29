@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTachometerAlt,
-  faBook,
-  faClipboardList,
-  faGraduationCap,
-  faCalendarAlt,
-  faEnvelope,
-  faUser,
-  faChevronDown,
-  faChevronRight,
-  faSignOutAlt,
-  faBars,
-  faTimes
-} from '@fortawesome/free-solid-svg-icons';
+  LayoutDashboard,
+  BookOpen,
+  ClipboardList,
+  GraduationCap,
+  Calendar,
+  Mail,
+  User,
+  ChevronDown,
+  ChevronRight,
+  LogOut,
+  Menu,
+  X
+} from 'lucide-react';
 import './StudentSidebar.css';
 
 const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
@@ -29,12 +28,12 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
     // fetch('/api/student/unread-messages')
     //   .then(res => res.json())
     //   .then(data => setUnreadMessages(data.count));
-    
+
     // Fetch pending assignments
     // fetch('/api/student/pending-assignments')
     //   .then(res => res.json())
     //   .then(data => setPendingAssignments(data.count));
-    
+
     // For demo purposes
     setUnreadMessages(3);
     setPendingAssignments(2);
@@ -56,10 +55,10 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
     localStorage.removeItem('role');
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
-    
+
     // Clear any session data
     sessionStorage.clear();
-    
+
     // If there's a parent component handling logout (like App.js), call it
     if (onLogout && typeof onLogout === 'function') {
       onLogout();
@@ -79,7 +78,7 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
     <>
       {/* Hamburger Menu Button */}
       <button className="student-hamburger-menu" onClick={toggleSidebar}>
-        <FontAwesomeIcon icon={isSidebarCollapsed ? faBars : faTimes} />
+        {isSidebarCollapsed ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
       </button>
 
       {/* Sidebar */}
@@ -98,29 +97,28 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
           <ul>
             <li className={isActive('/student/dashboard') ? 'active' : ''}>
               <NavLink to="/student/dashboard" className="sidebar-link">
-                <FontAwesomeIcon icon={faTachometerAlt} className="menu-icon" />
+                <LayoutDashboard className="menu-icon w-5 h-5" />
                 {!isSidebarCollapsed && <span className="menu-text">Dashboard</span>}
               </NavLink>
             </li>
-            
+
             <li className={`has-submenu ${activeSubmenu === 'courses' ? 'open' : ''}`}>
               <div className="submenu-header" onClick={() => toggleSubmenu('courses')}>
                 <div className="submenu-title">
-                  <FontAwesomeIcon icon={faBook} className="menu-icon" />
+                  <BookOpen className="menu-icon w-5 h-5" />
                   {!isSidebarCollapsed && <span className="menu-text">Courses</span>}
                 </div>
                 {!isSidebarCollapsed && (
-                  <FontAwesomeIcon
-                    icon={activeSubmenu === 'courses' ? faChevronDown : faChevronRight}
-                    className="submenu-arrow"
-                  />
+                  activeSubmenu === 'courses' ?
+                    <ChevronDown className="submenu-arrow w-4 h-4" /> :
+                    <ChevronRight className="submenu-arrow w-4 h-4" />
                 )}
               </div>
               {!isSidebarCollapsed && activeSubmenu === 'courses' && (
                 <ul className="submenu">
-                  <li><NavLink to="/student/courses/all">All Courses</NavLink></li>
-                  <li><NavLink to="/student/courses/enrolled">My Courses</NavLink></li>
-                  <li><NavLink to="/student/courses/recommended">Recommended</NavLink></li>
+                  <li><NavLink to="/student/courses">All Courses</NavLink></li>
+                  <li><NavLink to="/student/courses">My Courses</NavLink></li>
+                  <li><NavLink to="/student/courses">Recommended</NavLink></li>
                 </ul>
               )}
             </li>
@@ -128,7 +126,7 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
             <li className={`${isActive('/student/assignments') ? 'active' : ''} ${pendingAssignments > 0 ? 'has-badge' : ''}`}>
               <NavLink to="/student/assignments" className="sidebar-link">
                 <div className="menu-item-content">
-                  <FontAwesomeIcon icon={faClipboardList} className="menu-icon" />
+                  <ClipboardList className="menu-icon w-5 h-5" />
                   {!isSidebarCollapsed && <span className="menu-text">Assignments</span>}
                   {!isSidebarCollapsed && pendingAssignments > 0 && (
                     <span className="badge">{pendingAssignments}</span>
@@ -139,14 +137,14 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
 
             <li className={isActive('/student/grades') ? 'active' : ''}>
               <NavLink to="/student/grades" className="sidebar-link">
-                <FontAwesomeIcon icon={faGraduationCap} className="menu-icon" />
+                <GraduationCap className="menu-icon w-5 h-5" />
                 {!isSidebarCollapsed && <span className="menu-text">Grades</span>}
               </NavLink>
             </li>
 
             <li className={isActive('/student/calendar') ? 'active' : ''}>
               <NavLink to="/student/calendar" className="sidebar-link">
-                <FontAwesomeIcon icon={faCalendarAlt} className="menu-icon" />
+                <Calendar className="menu-icon w-5 h-5" />
                 {!isSidebarCollapsed && <span className="menu-text">Calendar</span>}
               </NavLink>
             </li>
@@ -154,7 +152,7 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
             <li className={`${isActive('/student/messages') ? 'active' : ''} ${unreadMessages > 0 ? 'has-badge' : ''}`}>
               <NavLink to="/student/messages" className="sidebar-link">
                 <div className="menu-item-content">
-                  <FontAwesomeIcon icon={faEnvelope} className="menu-icon" />
+                  <Mail className="menu-icon w-5 h-5" />
                   {!isSidebarCollapsed && <span className="menu-text">Messages</span>}
                   {!isSidebarCollapsed && unreadMessages > 0 && (
                     <span className="badge">{unreadMessages}</span>
@@ -165,7 +163,7 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
 
             <li className={isActive('/student/profile') ? 'active' : ''}>
               <NavLink to="/student/profile" className="sidebar-link">
-                <FontAwesomeIcon icon={faUser} className="menu-icon" />
+                <User className="menu-icon w-5 h-5" />
                 {!isSidebarCollapsed && <span className="menu-text">Profile</span>}
               </NavLink>
             </li>
@@ -180,7 +178,7 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
                 }}
                 className="logout-button"
               >
-                <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
+                <LogOut className="menu-icon w-5 h-5" />
                 {!isSidebarCollapsed && <span className="menu-text">Logout</span>}
               </button>
             </li>

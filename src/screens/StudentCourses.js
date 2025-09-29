@@ -1,514 +1,327 @@
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faBook, faGraduationCap, faSearch, faFilter, faBookmark, 
-  faCertificate, faComments, faChartLine, faUser, faClock,
-  faCheck, faStar, faSort, faSortUp, faSortDown
-} from '@fortawesome/free-solid-svg-icons';
-import './StudentCourses.css';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  BookOpen, Clock, Users, Star, Play,
+  Download, Calendar, Award, ChevronRight,
+  Search, Filter, Grid, List
+} from 'lucide-react';
+import { Card, Button, Badge } from '../components/ui/PremiumComponents';
+import { useTheme } from '../contexts/PremiumContexts';
+import StudentPageWrapper from '../components/StudentPageWrapper';
 
-const StudentCourses = ({ tab = 'all' }) => {
-  // Mock data for demonstration
-  const [allCourses, setAllCourses] = useState([
+const StudentCourses = () => {
+  const { theme } = useTheme();
+  const [viewMode, setViewMode] = useState('grid');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const courses = [
     {
       id: 1,
-      name: 'Introduction to Python Programming',
-      code: 'CS101',
-      description: 'Learn the fundamentals of Python programming language',
+      title: 'Advanced Mathematics',
       instructor: 'Dr. Jane Smith',
-      instructorEmail: 'jane.smith@university.edu',
+      progress: 75,
       duration: '12 weeks',
-      semester: 'Fall 2023',
-      creditHours: 3,
-      category: 'Computer Science',
-      difficulty: 'Beginner',
-      enrolled: true,
-      enrollmentCount: 120,
-      tags: ['Programming', 'Beginner', 'Python']
+      level: 'Advanced',
+      rating: 4.8,
+      students: 45,
+      thumbnail: '📊',
+      description: 'Comprehensive course covering calculus, algebra, and statistics',
+      lessons: 24,
+      completed: 18,
+      nextLesson: 'Integration Techniques',
+      dueDate: '2024-02-15'
     },
     {
       id: 2,
-      name: 'Data Structures and Algorithms',
-      code: 'CS201',
-      description: 'Advanced data structures and algorithm design',
-      instructor: 'Prof. John Doe',
-      instructorEmail: 'john.doe@university.edu',
-      duration: '16 weeks',
-      semester: 'Spring 2024',
-      creditHours: 4,
-      category: 'Computer Science',
-      difficulty: 'Intermediate',
-      enrolled: false,
-      enrollmentCount: 85,
-      tags: ['Algorithms', 'Intermediate', 'Data Structures']
+      title: 'Introduction to Science',
+      instructor: 'Prof. Brown',
+      progress: 60,
+      duration: '8 weeks',
+      level: 'Beginner',
+      rating: 4.6,
+      students: 32,
+      thumbnail: '🔬',
+      description: 'Basic scientific principles and methodology',
+      lessons: 16,
+      completed: 10,
+      nextLesson: 'Chemical Reactions',
+      dueDate: '2024-02-20'
     },
     {
       id: 3,
-      name: 'Machine Learning Fundamentals',
-      code: 'CS301',
-      description: 'Introduction to machine learning concepts and applications',
-      instructor: 'Dr. Emily Johnson',
-      instructorEmail: 'emily.johnson@university.edu',
-      duration: '14 weeks',
-      semester: 'Fall 2023',
-      creditHours: 3,
-      category: 'Computer Science',
-      difficulty: 'Advanced',
-      enrolled: true,
-      enrollmentCount: 65,
-      tags: ['AI', 'Advanced', 'Machine Learning']
+      title: 'Creative Writing',
+      instructor: 'Ms. Davis',
+      progress: 90,
+      duration: '10 weeks',
+      level: 'Intermediate',
+      rating: 4.9,
+      students: 28,
+      thumbnail: '✍️',
+      description: 'Develop creative writing skills and techniques',
+      lessons: 20,
+      completed: 18,
+      nextLesson: 'Poetry Workshop',
+      dueDate: '2024-02-10'
     },
     {
       id: 4,
-      name: 'Calculus I',
-      code: 'MATH101',
-      description: 'Fundamental concepts of differential and integral calculus',
-      instructor: 'Prof. Robert Brown',
-      instructorEmail: 'robert.brown@university.edu',
-      duration: '16 weeks',
-      semester: 'Spring 2024',
-      creditHours: 4,
-      category: 'Mathematics',
-      difficulty: 'Intermediate',
-      enrolled: false,
-      enrollmentCount: 210,
-      tags: ['Math', 'Intermediate', 'Calculus']
-    },
-    {
-      id: 5,
-      name: 'Web Development with React',
-      code: 'CS250',
-      description: 'Build modern web applications with React framework',
-      instructor: 'Dr. Sarah Wilson',
-      instructorEmail: 'sarah.wilson@university.edu',
-      duration: '10 weeks',
-      semester: 'Winter 2024',
-      creditHours: 3,
-      category: 'Computer Science',
-      difficulty: 'Intermediate',
-      enrolled: false,
-      enrollmentCount: 95,
-      tags: ['Web Development', 'Intermediate', 'React']
+      title: 'Computer Programming',
+      instructor: 'Mr. Wilson',
+      progress: 45,
+      duration: '14 weeks',
+      level: 'Intermediate',
+      rating: 4.7,
+      students: 38,
+      thumbnail: '💻',
+      description: 'Learn programming fundamentals with Python',
+      lessons: 28,
+      completed: 13,
+      nextLesson: 'Object-Oriented Programming',
+      dueDate: '2024-02-25'
     }
-  ]);
+  ];
 
-  const [myCourses, setMyCourses] = useState([
-    {
-      id: 1,
-      name: 'Introduction to Python Programming',
-      code: 'CS101',
-      progress: 65,
-      nextAssignment: {
-        name: 'Final Project',
-        dueDate: '2023-12-15',
-        type: 'Project'
-      },
-      materials: [
-        { name: 'Lecture 1 - Introduction.pdf', type: 'pdf' },
-        { name: 'Python Basics Video', type: 'video' },
-        { name: 'Week 2 Slides.pptx', type: 'slides' }
-      ],
-      grade: 'B+',
-      startDate: '2023-09-01',
-      endDate: '2023-12-20'
-    },
-    {
-      id: 3,
-      name: 'Machine Learning Fundamentals',
-      code: 'CS301',
-      progress: 30,
-      nextAssignment: {
-        name: 'Assignment 2 - Regression',
-        dueDate: '2023-11-30',
-        type: 'Assignment'
-      },
-      materials: [
-        { name: 'Lecture 1 - Linear Regression.pdf', type: 'pdf' },
-        { name: 'ML Concepts Video', type: 'video' }
-      ],
-      grade: 'A-',
-      startDate: '2023-10-01',
-      endDate: '2024-01-20'
-    }
-  ]);
+  const filteredCourses = courses.filter(course =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const [recommendedCourses, setRecommendedCourses] = useState([
-    {
-      id: 6,
-      name: 'Data Science with Python',
-      code: 'DS101',
-      description: 'Apply Python to data analysis and visualization',
-      category: 'Data Science',
-      difficulty: 'Intermediate',
-      popularity: 95,
-      tags: ['Data Science', 'Python', 'Intermediate'],
-      bookmarked: false
-    },
-    {
-      id: 7,
-      name: 'Advanced Web Development',
-      code: 'CS400',
-      description: 'Full-stack development with modern frameworks',
-      category: 'Computer Science',
-      difficulty: 'Advanced',
-      popularity: 88,
-      tags: ['Web Development', 'Advanced', 'Full-stack'],
-      bookmarked: true
-    },
-    {
-      id: 8,
-      name: 'Database Systems',
-      code: 'CS350',
-      description: 'Design and implementation of database systems',
-      category: 'Computer Science',
-      difficulty: 'Intermediate',
-      popularity: 76,
-      tags: ['Databases', 'Intermediate', 'SQL'],
-      bookmarked: false
-    }
-  ]);
-
-  // Use the tab from props (provided by the route)
-  const activeTab = tab;
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState('All');
-  const [filterDifficulty, setFilterDifficulty] = useState('All');
-  const [sortBy, setSortBy] = useState('popularity');
-  const [sortOrder, setSortOrder] = useState('desc');
-
-  // Get unique categories for filter
-  const categories = [...new Set(allCourses.map(course => course.category))];
-  
-  // Filter and sort courses
-  const filteredCourses = allCourses.filter(course => {
-    const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = filterCategory === 'All' || course.category === filterCategory;
-    const matchesDifficulty = filterDifficulty === 'All' || course.difficulty === filterDifficulty;
-    
-    return matchesSearch && matchesCategory && matchesDifficulty;
-  }).sort((a, b) => {
-    if (sortBy === 'popularity') {
-      return sortOrder === 'desc' ? b.enrollmentCount - a.enrollmentCount : a.enrollmentCount - b.enrollmentCount;
-    } else if (sortBy === 'name') {
-      return sortOrder === 'desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name);
-    } else if (sortBy === 'latest') {
-      // For simplicity, we'll use ID as a proxy for latest
-      return sortOrder === 'desc' ? b.id - a.id : a.id - b.id;
-    }
-    return 0;
-  });
-
-  // Toggle course enrollment
-  const toggleEnrollment = (courseId) => {
-    setAllCourses(prevCourses => 
-      prevCourses.map(course => 
-        course.id === courseId 
-          ? { ...course, enrolled: !course.enrolled } 
-          : course
-      )
-    );
-    
-    // Update myCourses based on enrollment status
-    const course = allCourses.find(c => c.id === courseId);
-    if (course) {
-      if (course.enrolled) {
-        // Remove from myCourses
-        setMyCourses(prev => prev.filter(c => c.id !== courseId));
-      } else {
-        // Add to myCourses with default values
-        const newMyCourse = {
-          id: course.id,
-          name: course.name,
-          code: course.code,
-          progress: 0,
-          nextAssignment: null,
-          materials: [],
-          grade: 'N/A',
-          startDate: new Date().toISOString().split('T')[0],
-          endDate: new Date(Date.now() + 90*24*60*60*1000).toISOString().split('T')[0] // 90 days from now
-        };
-        setMyCourses(prev => [...prev, newMyCourse]);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
       }
     }
   };
 
-  // Toggle bookmark for recommended courses
-  const toggleBookmark = (courseId) => {
-    setRecommendedCourses(prevCourses => 
-      prevCourses.map(course => 
-        course.id === courseId 
-          ? { ...course, bookmarked: !course.bookmarked } 
-          : course
-      )
-    );
-  };
-
-  // Drop a course
-  const dropCourse = (courseId) => {
-    if (window.confirm('Are you sure you want to drop this course?')) {
-      setMyCourses(prev => prev.filter(course => course.id !== courseId));
-      setAllCourses(prev => 
-        prev.map(course => 
-          course.id === courseId 
-            ? { ...course, enrolled: false } 
-            : course
-        )
-      );
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
     }
   };
 
-  // Render star rating based on popularity
-  const renderRating = (popularity) => {
-    const stars = Math.min(5, Math.floor(popularity / 20));
-    return (
-      <div className="rating">
-        {[...Array(5)].map((_, i) => (
-          <FontAwesomeIcon 
-            key={i} 
-            icon={faStar} 
-            className={i < stars ? 'star-filled' : 'star-empty'} 
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
-    <div className="student-courses-container">
-      <div className="courses-header">
-        <h2>My Courses</h2>
-        <div className="header-tabs">
-          <button 
-            className={activeTab === 'all' ? 'active' : ''} 
-            onClick={() => window.location.href = '/student/courses/all'}
-          >
-            <FontAwesomeIcon icon={faBook} /> All Courses
-          </button>
-          <button 
-            className={activeTab === 'my' ? 'active' : ''} 
-            onClick={() => window.location.href = '/student/courses/enrolled'}
-          >
-            <FontAwesomeIcon icon={faGraduationCap} /> My Courses
-          </button>
-          <button 
-            className={activeTab === 'recommended' ? 'active' : ''} 
-            onClick={() => window.location.href = '/student/courses/recommended'}
-          >
-            <FontAwesomeIcon icon={faStar} /> Recommended
-          </button>
-        </div>
-      </div>
-
-      {/* All Courses Tab */}
-      {activeTab === 'all' && (
-        <div className="courses-tab-content">
-          {/* Search and Filters */}
-          <div className="courses-filters">
-            <div className="search-box">
-              <FontAwesomeIcon icon={faSearch} />
-              <input
-                type="text"
-                placeholder="Search courses..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+    <StudentPageWrapper>
+      <motion.div
+        className="p-6 lg:p-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Header */}
+        <motion.header className="mb-8" variants={itemVariants}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                My Courses 📚
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                Continue your learning journey with personalized courses
+              </p>
             </div>
-            <div className="filter-group">
-              <FontAwesomeIcon icon={faFilter} />
-              <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-                <option value="All">All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-              <select value={filterDifficulty} onChange={(e) => setFilterDifficulty(e.target.value)}>
-                <option value="All">All Difficulties</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
-              <div className="sort-controls">
-                <FontAwesomeIcon icon={faSort} />
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="popularity">Sort by Popularity</option>
-                  <option value="name">Sort by Name</option>
-                  <option value="latest">Sort by Latest</option>
-                </select>
-                <button 
-                  className="sort-order-btn"
-                  onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={viewMode === 'grid' ? 'primary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
                 >
-                  <FontAwesomeIcon icon={sortOrder === 'asc' ? faSortUp : faSortDown} />
-                </button>
+                  <Grid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'primary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           </div>
+        </motion.header>
 
-          {/* Courses Grid */}
-          <div className="courses-grid">
-            {filteredCourses.map(course => (
-              <div key={course.id} className="course-card">
-                <div className="course-header">
-                  <h3>{course.name} <span className="course-code">({course.code})</span></h3>
-                  <div className="course-tags">
-                    {course.tags.map(tag => (
-                      <span key={tag} className="tag">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-                <p className="course-description">{course.description}</p>
-                <div className="course-details">
-                  <div className="detail-item">
-                    <FontAwesomeIcon icon={faUser} />
-                    <span>{course.instructor}</span>
-                  </div>
-                  <div className="detail-item">
-                    <FontAwesomeIcon icon={faClock} />
-                    <span>{course.duration} | {course.semester}</span>
-                  </div>
-                  <div className="detail-item">
-                    <FontAwesomeIcon icon={faGraduationCap} />
-                    <span>{course.creditHours} Credit Hours</span>
-                  </div>
-                  <div className="detail-item">
-                    <span>Enrolled: {course.enrollmentCount} students</span>
-                  </div>
-                </div>
-                <div className="course-actions">
-                  <button 
-                    className={course.enrolled ? 'enrolled-btn' : 'enroll-btn'}
-                    onClick={() => toggleEnrollment(course.id)}
-                  >
-                    <FontAwesomeIcon icon={course.enrolled ? faCheck : faGraduationCap} />
-                    {course.enrolled ? 'Enrolled' : 'Enroll'}
-                  </button>
-                  {renderRating(course.enrollmentCount)}
-                </div>
+        {/* Search and Filter */}
+        <motion.section className="mb-8" variants={itemVariants}>
+          <Card className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+              <Button variant="ghost" className="flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                Filter
+              </Button>
+            </div>
+          </Card>
+        </motion.section>
 
-      {/* My Courses Tab */}
-      {(activeTab === 'my' || activeTab === 'enrolled') && (
-        <div className="courses-tab-content">
-          <div className="courses-grid">
-            {myCourses.map(course => (
-              <div key={course.id} className="course-card my-course-card">
-                <div className="course-header">
-                  <h3>{course.name} <span className="course-code">({course.code})</span></h3>
-                  <div className="course-progress">
-                    <span>Progress: {course.progress}%</span>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill" 
-                        style={{ width: `${course.progress}%` }}
-                      ></div>
+        {/* Courses Grid/List */}
+        <motion.section variants={itemVariants}>
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses.map((course, index) => (
+                <motion.div
+                  key={course.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Card className="p-6 h-full flex flex-col bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="text-4xl">{course.thumbnail}</div>
+                      <Badge variant={course.level === 'Advanced' ? 'danger' : course.level === 'Intermediate' ? 'warning' : 'success'}>
+                        {course.level}
+                      </Badge>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Grade Summary */}
-                <div className="grade-summary">
-                  <h4>Current Grade: <span className="grade-value">{course.grade}</span></h4>
-                </div>
-                
-                {/* Upcoming Assignments */}
-                {course.nextAssignment && (
-                  <div className="upcoming-assignment">
-                    <h4>Next Assignment:</h4>
-                    <p>{course.nextAssignment.name} - Due: {course.nextAssignment.dueDate}</p>
-                    <button className="view-assignment-btn">View Assignment</button>
-                  </div>
-                )}
-                
-                {/* Course Materials */}
-                <div className="course-materials">
-                  <h4>Course Materials:</h4>
-                  <ul>
-                    {course.materials.map((material, index) => (
-                      <li key={index}>
-                        <FontAwesomeIcon icon={faBook} /> {material.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                {/* Course Dates */}
-                <div className="course-dates">
-                  <p>Course Dates: {course.startDate} to {course.endDate}</p>
-                </div>
-                
-                {/* Actions */}
-                <div className="course-actions">
-                  <button className="drop-course-btn" onClick={() => dropCourse(course.id)}>
-                    Drop Course
-                  </button>
-                  <button className="certificate-btn">
-                    <FontAwesomeIcon icon={faCertificate} /> View Certificate
-                  </button>
-                  <button className="forum-btn">
-                    <FontAwesomeIcon icon={faComments} /> Discussion Forum
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* Recommended Courses Tab */}
-      {activeTab === 'recommended' && (
-        <div className="courses-tab-content">
-          <div className="courses-grid">
-            {recommendedCourses.map(course => (
-              <div key={course.id} className="course-card recommended-course-card">
-                <div className="course-header">
-                  <h3>{course.name} <span className="course-code">({course.code})</span></h3>
-                  <button 
-                    className="bookmark-btn"
-                    onClick={() => toggleBookmark(course.id)}
-                  >
-                    <FontAwesomeIcon 
-                      icon={faBookmark} 
-                      className={course.bookmarked ? 'bookmarked' : ''} 
-                    />
-                  </button>
-                </div>
-                <p className="course-description">{course.description}</p>
-                <div className="course-details">
-                  <div className="detail-item">
-                    <FontAwesomeIcon icon={faGraduationCap} />
-                    <span>{course.category}</span>
-                  </div>
-                  <div className="detail-item">
-                    <FontAwesomeIcon icon={faChartLine} />
-                    <span>Popularity: {course.popularity}%</span>
-                  </div>
-                </div>
-                <div className="course-tags">
-                  {course.tags.map(tag => (
-                    <span key={tag} className="tag">{tag}</span>
-                  ))}
-                </div>
-                <div className="course-actions">
-                  <button className="enroll-btn">
-                    <FontAwesomeIcon icon={faGraduationCap} /> Enroll
-                  </button>
-                  <button className="view-details-btn">
-                    View Details
-                  </button>
-                </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {course.title}
+                    </h3>
+
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 flex-1">
+                      {course.description}
+                    </p>
+
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Progress</span>
+                        <span className="font-medium">{course.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${course.progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        {course.students}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-yellow-500" />
+                        {course.rating}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {course.duration}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button variant="primary" className="flex-1">
+                        <Play className="w-4 h-4 mr-2" />
+                        Continue
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <Card className="overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Course
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Instructor
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Progress
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Next Lesson
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                    {filteredCourses.map((course, index) => (
+                      <motion.tr
+                        key={course.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="text-2xl mr-3">{course.thumbnail}</div>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                {course.title}
+                              </div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {course.lessons} lessons • {course.completed} completed
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          {course.instructor}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                              <div
+                                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
+                                style={{ width: `${course.progress}%` }}
+                              />
+                            </div>
+                            <span className="text-sm text-gray-900 dark:text-white">{course.progress}%</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          {course.nextLesson}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex items-center gap-2">
+                            <Button variant="primary" size="sm">
+                              <Play className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <Download className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+            </Card>
+          )}
+        </motion.section>
+      </motion.div>
+    </StudentPageWrapper>
   );
 };
 

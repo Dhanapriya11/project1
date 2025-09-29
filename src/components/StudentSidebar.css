@@ -27,7 +27,10 @@
 .student-sidebar {
   width: 280px;
   height: 100vh;
-  background: linear-gradient(180deg, #1a2a6c 0%, #2c3e50 100%);
+  background: linear-gradient(135deg,
+      rgba(26, 42, 108, 0.95) 0%,
+      rgba(44, 62, 80, 0.95) 50%,
+      rgba(15, 23, 42, 0.95) 100%);
   color: white;
   position: fixed;
   left: 0;
@@ -35,7 +38,9 @@
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    4px 0 30px rgba(0, 0, 0, 0.6),
+    inset -1px 0 0 rgba(255, 255, 255, 0.1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -44,6 +49,8 @@
   padding: 0;
   transform: translateX(0);
   will-change: transform, width;
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .student-sidebar.collapsed {
@@ -64,20 +71,40 @@
 }
 
 .student-sidebar-header {
-  padding: 25px 20px;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 30px 20px;
+  background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.1) 100%);
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.student-sidebar-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+      rgba(0, 180, 219, 0.1) 0%,
+      rgba(0, 131, 176, 0.05) 100%);
+  pointer-events: none;
 }
 
 .student-sidebar-header h2 {
   margin: 0;
-  font-size: 1.6em;
-  font-weight: 700;
-  background: linear-gradient(to right, #00b4db, #0083b0);
+  font-size: 1.8em;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00b4db 0%, #0083b0 50%, #667eea 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
 .student-sidebar-header p {
@@ -98,7 +125,8 @@
 }
 
 .student-sidebar-nav li {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
 }
 
 .student-sidebar-nav li:last-child {
@@ -108,41 +136,61 @@
 .student-sidebar-nav a {
   display: flex;
   align-items: center;
-  padding: 16px 25px;
-  color: #e0e0e0;
+  padding: 18px 25px;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 16px;
   font-weight: 500;
   position: relative;
+  border-radius: 0 25px 25px 0;
+  margin-right: 15px;
+  backdrop-filter: blur(10px);
 }
 
 .student-sidebar-nav a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(0, 180, 219, 0.1) 100%);
   color: white;
-  padding-left: 30px;
+  padding-left: 35px;
+  transform: translateX(5px);
+  box-shadow:
+    0 4px 15px rgba(0, 180, 219, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .student-sidebar-nav a:hover .menu-icon {
-  transform: scale(1.2);
+  transform: scale(1.15) rotate(5deg);
+  color: #00b4db;
 }
 
 .student-sidebar-nav a.active {
-  background: linear-gradient(90deg, rgba(0, 180, 219, 0.3) 0%, rgba(0, 131, 176, 0.3) 100%);
+  background: linear-gradient(135deg,
+      rgba(0, 180, 219, 0.25) 0%,
+      rgba(0, 131, 176, 0.2) 50%,
+      rgba(102, 126, 234, 0.15) 100%);
   color: white;
   border-left: 4px solid #00b4db;
+  box-shadow:
+    0 6px 20px rgba(0, 180, 219, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateX(8px);
 }
 
 .student-sidebar-nav a.active .menu-icon {
   color: #00b4db;
+  transform: scale(1.1);
 }
 
 .student-sidebar-nav .menu-icon {
   margin-right: 15px;
   transition: all 0.3s ease;
-  width: 24px;
+  width: 20px;
+  height: 20px;
   text-align: center;
   font-size: 1.2em;
+  flex-shrink: 0;
 }
 
 .student-sidebar-nav a:hover .menu-icon {
@@ -194,11 +242,13 @@
 }
 
 .has-submenu.open .submenu {
-  max-height: 500px; /* Adjust based on your content */
+  max-height: 500px;
+  /* Adjust based on your content */
 }
 
 .submenu a {
-  padding-left: 55px; /* icon width + margin + extra padding */
+  padding-left: 55px;
+  /* icon width + margin + extra padding */
 }
 
 /* Collapsed state */
@@ -210,6 +260,8 @@
 .student-sidebar.collapsed .menu-icon {
   margin-right: 0;
   font-size: 1.3em;
+  width: 24px;
+  height: 24px;
 }
 
 .student-sidebar.collapsed .sidebar-link {
@@ -222,18 +274,106 @@
   padding: 18px 0;
 }
 
+/* Menu Item Content and Badge Styling */
+.menu-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.badge {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff4757 100%);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 15px;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 12px rgba(255, 107, 107, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: pulse 2s infinite;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
+  transition: left 0.5s;
+}
+
+.badge:hover::before {
+  left: 100%;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  }
+}
+
 /* Footer */
 .student-sidebar-footer {
-  padding: 20px;
+  padding: 25px 20px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.student-sidebar-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+      rgba(0, 180, 219, 0.05) 0%,
+      rgba(0, 131, 176, 0.02) 100%);
+  pointer-events: none;
 }
 
 .student-sidebar-footer p {
   margin: 0;
   font-size: 0.85em;
-  color: #a0a0a0;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
 }
 
 /* Responsive adjustments */
@@ -241,7 +381,7 @@
   .student-sidebar {
     width: 250px;
   }
-  
+
   .student-sidebar.collapsed {
     width: 60px;
   }
