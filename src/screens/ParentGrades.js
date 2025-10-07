@@ -1,353 +1,514 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaChartLine, FaFilePdf, FaArrowLeft, FaSearch, FaFilter } from 'react-icons/fa';
-import './ParentStyles.css';
-
-// Mock data - Replace with actual API calls
-const mockGradesData = {
-  currentGrades: [
-    { 
-      subject: 'Mathematics', 
-      grade: 'A-', 
-      percentage: 92, 
-      teacher: 'Mr. Johnson',
-      lastUpdated: '2025-09-05',
-      trend: 'up',
-      comments: 'Excellent work this term! Keep up the good progress.',
-      assignments: [
-        { name: 'Chapter 5 Test', score: '45/50', percentage: 90, date: '2025-09-05' },
-        { name: 'Homework 3.2', score: '18/20', percentage: 90, date: '2025-08-30' },
-        { name: 'Quiz 4', score: '17/20', percentage: 85, date: '2025-08-20' },
-      ]
-    },
-    { 
-      subject: 'Science', 
-      grade: 'B+', 
-      percentage: 87, 
-      teacher: 'Ms. Williams',
-      lastUpdated: '2025-09-03',
-      trend: 'up',
-      comments: 'Showing great improvement in lab work.',
-      assignments: [
-        { name: 'Lab Report 2', score: '42/50', percentage: 84, date: '2025-09-03' },
-        { name: 'Chapter 4 Test', score: '41/50', percentage: 82, date: '2025-08-25' },
-      ]
-    },
-    { 
-      subject: 'English', 
-      grade: 'A', 
-      percentage: 95, 
-      teacher: 'Mrs. Anderson',
-      lastUpdated: '2025-09-01',
-      trend: 'same',
-      comments: 'Outstanding writing skills demonstrated in recent essays.',
-      assignments: [
-        { name: 'Essay Draft', score: '48/50', percentage: 96, date: '2025-09-01' },
-        { name: 'Reading Quiz', score: '19/20', percentage: 95, date: '2025-08-28' },
-      ]
-    },
-    { 
-      subject: 'History', 
-      grade: 'B', 
-      percentage: 83, 
-      teacher: 'Mr. Thompson',
-      lastUpdated: '2025-08-30',
-      trend: 'down',
-      comments: 'Good participation in class discussions. Could improve on essay structure.',
-      assignments: [
-        { name: 'Research Paper', score: '78/100', percentage: 78, date: '2025-08-30' },
-        { name: 'Chapter 3 Quiz', score: '17/20', percentage: 85, date: '2025-08-15' },
-      ]
-    },
-  ],
-  classAverages: {
-    'Mathematics': 85,
-    'Science': 82,
-    'English': 88,
-    'History': 80
-  },
-  reportCards: [
-    { term: 'Spring 2025', date: '2025-06-15' },
-    { term: 'Fall 2024', date: '2024-12-20' },
-    { term: 'Spring 2024', date: '2024-06-10' }
-  ]
-};
+import { motion } from 'framer-motion';
+import { BookOpen, TrendingUp, TrendingDown, Award, BarChart3, GraduationCap, Star, User } from 'lucide-react';
+import ParentPageWrapper from '../components/ParentPageWrapper';
+import { useTheme } from '../contexts/PremiumContexts';
 
 const ParentGrades = () => {
-  const navigate = useNavigate();
+  const [selectedChild, setSelectedChild] = useState('both');
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('subject');
-  const [view, setView] = useState('overview');
+  const [viewMode, setViewMode] = useState('overview');
+  const { theme } = useTheme();
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  // Enhanced mock data for both children
+  const childrenData = {
+    aarav: {
+      name: 'Aarav Patel',
+      class: 'Class 10-B',
+      avatar: '👦',
+      overallGPA: 3.8,
+      rank: 12,
+      totalStudents: 85,
+      subjects: [
+        {
+          name: 'Mathematics',
+          grade: 'A',
+          percentage: 92,
+          teacher: 'Mrs. Sharma',
+          trend: 'up',
+          color: 'from-blue-500 to-blue-600',
+          assignments: [
+            { name: 'Algebra Test', score: 45, total: 50, date: '2024-01-18', type: 'Test' },
+            { name: 'Geometry Quiz', score: 28, total: 30, date: '2024-01-15', type: 'Quiz' },
+            { name: 'Homework Set 5', score: 18, total: 20, date: '2024-01-12', type: 'Homework' }
+          ]
+        },
+        {
+          name: 'Physics',
+          grade: 'B+',
+          percentage: 87,
+          teacher: 'Mr. Gupta',
+          trend: 'up',
+          color: 'from-purple-500 to-purple-600',
+          assignments: [
+            { name: 'Mechanics Test', score: 42, total: 50, date: '2024-01-19', type: 'Test' },
+            { name: 'Lab Report', score: 85, total: 100, date: '2024-01-16', type: 'Lab' },
+            { name: 'Motion Quiz', score: 24, total: 30, date: '2024-01-13', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'Chemistry',
+          grade: 'A-',
+          percentage: 89,
+          teacher: 'Dr. Singh',
+          trend: 'same',
+          color: 'from-green-500 to-green-600',
+          assignments: [
+            { name: 'Organic Chemistry Test', score: 44, total: 50, date: '2024-01-17', type: 'Test' },
+            { name: 'Lab Practical', score: 88, total: 100, date: '2024-01-14', type: 'Lab' },
+            { name: 'Formula Quiz', score: 26, total: 30, date: '2024-01-11', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'English',
+          grade: 'B',
+          percentage: 82,
+          teacher: 'Ms. Patel',
+          trend: 'down',
+          color: 'from-yellow-500 to-yellow-600',
+          assignments: [
+            { name: 'Essay Writing', score: 32, total: 40, date: '2024-01-18', type: 'Assignment' },
+            { name: 'Literature Test', score: 38, total: 50, date: '2024-01-15', type: 'Test' },
+            { name: 'Grammar Quiz', score: 22, total: 30, date: '2024-01-12', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'Biology',
+          grade: 'A',
+          percentage: 94,
+          teacher: 'Dr. Mehta',
+          trend: 'up',
+          color: 'from-red-500 to-red-600',
+          assignments: [
+            { name: 'Genetics Test', score: 47, total: 50, date: '2024-01-19', type: 'Test' },
+            { name: 'Microscopy Lab', score: 93, total: 100, date: '2024-01-16', type: 'Lab' },
+            { name: 'Cell Biology Quiz', score: 28, total: 30, date: '2024-01-13', type: 'Quiz' }
+          ]
+        }
+      ]
+    },
+    maya: {
+      name: 'Maya Sharma',
+      class: 'Class 8-A',
+      avatar: '👧',
+      overallGPA: 4.0,
+      rank: 3,
+      totalStudents: 75,
+      subjects: [
+        {
+          name: 'Mathematics',
+          grade: 'A+',
+          percentage: 96,
+          teacher: 'Mr. Kumar',
+          trend: 'up',
+          color: 'from-blue-500 to-blue-600',
+          assignments: [
+            { name: 'Fractions Test', score: 48, total: 50, date: '2024-01-18', type: 'Test' },
+            { name: 'Geometry Quiz', score: 29, total: 30, date: '2024-01-15', type: 'Quiz' },
+            { name: 'Problem Solving', score: 19, total: 20, date: '2024-01-12', type: 'Homework' }
+          ]
+        },
+        {
+          name: 'Science',
+          grade: 'A',
+          percentage: 93,
+          teacher: 'Mrs. Verma',
+          trend: 'up',
+          color: 'from-purple-500 to-purple-600',
+          assignments: [
+            { name: 'States of Matter', score: 46, total: 50, date: '2024-01-19', type: 'Test' },
+            { name: 'Lab Experiment', score: 91, total: 100, date: '2024-01-16', type: 'Lab' },
+            { name: 'Elements Quiz', score: 27, total: 30, date: '2024-01-13', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'English',
+          grade: 'A+',
+          percentage: 97,
+          teacher: 'Ms. Joshi',
+          trend: 'up',
+          color: 'from-green-500 to-green-600',
+          assignments: [
+            { name: 'Creative Writing', score: 39, total: 40, date: '2024-01-17', type: 'Assignment' },
+            { name: 'Reading Test', score: 48, total: 50, date: '2024-01-14', type: 'Test' },
+            { name: 'Vocabulary Quiz', score: 29, total: 30, date: '2024-01-11', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'Social Studies',
+          grade: 'A',
+          percentage: 90,
+          teacher: 'Mr. Agarwal',
+          trend: 'same',
+          color: 'from-yellow-500 to-yellow-600',
+          assignments: [
+            { name: 'History Test', score: 44, total: 50, date: '2024-01-18', type: 'Test' },
+            { name: 'Geography Project', score: 88, total: 100, date: '2024-01-15', type: 'Project' },
+            { name: 'Civics Quiz', score: 26, total: 30, date: '2024-01-12', type: 'Quiz' }
+          ]
+        },
+        {
+          name: 'Hindi',
+          grade: 'A+',
+          percentage: 98,
+          teacher: 'Mrs. Sharma',
+          trend: 'up',
+          color: 'from-red-500 to-red-600',
+          assignments: [
+            { name: 'Literature Test', score: 49, total: 50, date: '2024-01-19', type: 'Test' },
+            { name: 'Essay Writing', score: 39, total: 40, date: '2024-01-16', type: 'Assignment' },
+            { name: 'Grammar Quiz', score: 30, total: 30, date: '2024-01-13', type: 'Quiz' }
+          ]
+        }
+      ]
+    }
   };
-
-  const filteredGrades = mockGradesData.currentGrades
-    .filter(grade => 
-      grade.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      grade.teacher.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortBy === 'subject') return a.subject.localeCompare(b.subject);
-      if (sortBy === 'grade') return a.percentage - b.percentage;
-      return 0;
-    });
 
   const getGradeColor = (percentage) => {
-    if (percentage >= 90) return '#4CAF50';
-    if (percentage >= 80) return '#8BC34A';
-    if (percentage >= 70) return '#FFC107';
-    if (percentage >= 60) return '#FF9800';
-    return '#F44336';
+    if (percentage >= 95) return 'text-green-600 dark:text-green-400';
+    if (percentage >= 90) return 'text-blue-600 dark:text-blue-400';
+    if (percentage >= 85) return 'text-purple-600 dark:text-purple-400';
+    if (percentage >= 80) return 'text-yellow-600 dark:text-yellow-400';
+    if (percentage >= 75) return 'text-orange-600 dark:text-orange-400';
+    return 'text-red-600 dark:text-red-400';
   };
 
-  const renderTrendIcon = (trend) => {
-    if (trend === 'up') return <span className="trend-up">↑</span>;
-    if (trend === 'down') return <span className="trend-down">↓</span>;
-    return <span className="trend-same">→</span>;
+  const getTrendIcon = (trend) => {
+    switch (trend) {
+      case 'up': return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
+      default: return <BarChart3 className="w-4 h-4 text-yellow-500" />;
+    }
   };
 
-  const handleViewReportCard = (term) => {
-    // In a real app, this would open the PDF or detailed view
-    alert(`Viewing report card for ${term}`);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric' 
+    });
   };
 
-  const { currentGrades, classAverages, reportCards } = mockGradesData;
-  const selectedGradeData = selectedSubject 
-    ? currentGrades.find(grade => grade.subject === selectedSubject)
-    : null;
-
-  return (
-    <div className="parent-container">
-      <div className="parent-header">
-        <div>
-          <h1>Grades Overview</h1>
-          <p>Track your child's academic progress</p>
+  const renderOverviewCards = (data) => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-blue-100 text-sm font-medium">Overall GPA</p>
+            <p className="text-3xl font-bold">{data.overallGPA}</p>
+          </div>
+          <GraduationCap className="w-8 h-8 text-blue-200" />
         </div>
-        <div>
-          <button 
-            className="parent-btn parent-btn-secondary" 
-            onClick={() => navigate(-1)}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-purple-100 text-sm font-medium">Class Rank</p>
+            <p className="text-3xl font-bold">#{data.rank}</p>
+            <p className="text-purple-200 text-xs">of {data.totalStudents} students</p>
+          </div>
+          <Award className="w-8 h-8 text-purple-200" />
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-green-100 text-sm font-medium">Average Score</p>
+            <p className="text-3xl font-bold">
+              {Math.round(data.subjects.reduce((acc, sub) => acc + sub.percentage, 0) / data.subjects.length)}%
+            </p>
+          </div>
+          <Star className="w-8 h-8 text-green-200" />
+        </div>
+      </motion.div>
+    </div>
+  );
+
+  const renderSubjectGrades = (data) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-surface-primary dark:bg-dark-surface-primary rounded-2xl p-6 shadow-lg mb-6"
+    >
+      <h3 className="text-xl font-semibold text-text-primary dark:text-dark-text-primary mb-6">
+        Subject Performance
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.subjects.map((subject, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-background-secondary dark:bg-dark-background-secondary rounded-xl p-4 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            onClick={() => setSelectedSubject(subject)}
           >
-            <FaArrowLeft /> Back to Dashboard
-          </button>
+            <div className="flex items-center justify-between mb-3">
+              <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${subject.color} flex items-center justify-center text-white font-bold shadow-lg`}>
+                {subject.name.charAt(0)}
+              </div>
+              {getTrendIcon(subject.trend)}
+            </div>
+            <h4 className="font-semibold text-text-primary dark:text-dark-text-primary mb-1">
+              {subject.name}
+            </h4>
+            <p className="text-sm text-text-secondary dark:text-dark-text-secondary mb-2">
+              {subject.teacher}
+            </p>
+            <div className="flex items-center justify-between">
+              <span className={`text-2xl font-bold ${getGradeColor(subject.percentage)}`}>
+                {subject.grade}
+              </span>
+              <span className="text-lg font-semibold text-text-primary dark:text-dark-text-primary">
+                {subject.percentage}%
+              </span>
+            </div>
+            <div className="w-full h-2 bg-background-tertiary dark:bg-dark-background-tertiary rounded-full mt-2 overflow-hidden">
+              <div
+                className={`h-full bg-gradient-to-r ${subject.color} transition-all duration-300`}
+                style={{ width: `${subject.percentage}%` }}
+              />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+
+  const renderSubjectDetail = (subject) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-surface-primary dark:bg-dark-surface-primary rounded-2xl p-6 shadow-lg"
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4">
+          <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${subject.color} flex items-center justify-center text-white font-bold text-2xl shadow-lg`}>
+            {subject.name.charAt(0)}
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-text-primary dark:text-dark-text-primary">
+              {subject.name}
+            </h3>
+            <p className="text-text-secondary dark:text-dark-text-secondary">{subject.teacher}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setSelectedSubject(null)}
+          className="px-4 py-2 bg-background-secondary dark:bg-dark-background-secondary text-text-secondary dark:text-dark-text-secondary rounded-xl hover:bg-background-tertiary dark:hover:bg-dark-background-tertiary transition-all"
+        >
+          Back to All Subjects
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="text-center p-4 bg-background-secondary dark:bg-dark-background-secondary rounded-xl">
+          <p className="text-3xl font-bold text-accent-primary">{subject.grade}</p>
+          <p className="text-sm text-text-secondary dark:text-dark-text-secondary">Current Grade</p>
+        </div>
+        <div className="text-center p-4 bg-background-secondary dark:bg-dark-background-secondary rounded-xl">
+          <p className="text-3xl font-bold text-text-primary dark:text-dark-text-primary">{subject.percentage}%</p>
+          <p className="text-sm text-text-secondary dark:text-dark-text-secondary">Average Score</p>
+        </div>
+        <div className="text-center p-4 bg-background-secondary dark:bg-dark-background-secondary rounded-xl flex items-center justify-center space-x-2">
+          {getTrendIcon(subject.trend)}
+          <span className="text-lg font-semibold text-text-primary dark:text-dark-text-primary capitalize">
+            {subject.trend}
+          </span>
         </div>
       </div>
-      
-      <div className="parent-dashboard-container">
-        <div className="parent-card">
-          <div className="search-box">
-            <FaSearch className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search subjects or teachers..."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
-          
-          <div className="filter-dropdown">
-            <FaFilter />
-            <select 
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="filter-select"
-            >
-              <option value="subject">Sort by Subject</option>
-              <option value="grade">Sort by Grade</option>
-            </select>
-          </div>
-        </div>
 
-        {/* Navigation Tabs */}
-        <div className="grades-tabs">
-          <button 
-            className={`tab-button ${view === 'overview' ? 'active' : ''}`}
-            onClick={() => setView('overview')}
+      <h4 className="text-lg font-semibold text-text-primary dark:text-dark-text-primary mb-4">
+        Recent Assignments
+      </h4>
+      <div className="space-y-3">
+        {subject.assignments.map((assignment, index) => (
+          <div
+            key={index}
+            className="flex items-center justify-between p-4 bg-background-secondary dark:bg-dark-background-secondary rounded-xl"
           >
-            <FaChartLine /> Overview
-          </button>
-          <button 
-            className={`tab-button ${view === 'report-cards' ? 'active' : ''}`}
-            onClick={() => setView('report-cards')}
-          >
-            <FaFilePdf /> Report Cards
-          </button>
-        </div>
+            <div className="flex items-center space-x-4">
+              <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${subject.color} flex items-center justify-center text-white font-bold text-sm`}>
+                {assignment.type.charAt(0)}
+              </div>
+              <div>
+                <h5 className="font-semibold text-text-primary dark:text-dark-text-primary">
+                  {assignment.name}
+                </h5>
+                <p className="text-sm text-text-secondary dark:text-dark-text-secondary">
+                  {assignment.type} • {formatDate(assignment.date)}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-lg font-bold text-text-primary dark:text-dark-text-primary">
+                {assignment.score}/{assignment.total}
+              </p>
+              <p className={`text-sm font-medium ${getGradeColor((assignment.score / assignment.total) * 100)}`}>
+                {Math.round((assignment.score / assignment.total) * 100)}%
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
 
-        {/* Grades Overview */}
-        {view === 'overview' && (
-          <div className="grades-overview">
-            {selectedSubject ? (
-              <div className="subject-details">
-                <div className="subject-header">
-                  <h2>{selectedSubject}</h2>
-                  <button 
-                    className="btn btn-secondary"
-                    onClick={() => setSelectedSubject(null)}
-                  >
-                    Back to All Subjects
-                  </button>
-                </div>
-                
-                <div className="grade-summary">
-                  <div className="grade-display" style={{ backgroundColor: getGradeColor(selectedGradeData.percentage) }}>
-                    <div className="grade-letter">{selectedGradeData.grade}</div>
-                    <div className="grade-percentage">{selectedGradeData.percentage}%</div>
-                    <div className="grade-trend">
-                      {renderTrendIcon(selectedGradeData.trend)}
+  const getCurrentData = () => {
+    if (selectedChild === 'both') {
+      return Object.values(childrenData);
+    }
+    return [childrenData[selectedChild]];
+  };
+
+  return (
+    <ParentPageWrapper>
+      <div className="min-h-screen p-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-4xl font-bold text-text-primary dark:text-dark-text-primary mb-2">
+            Academic Performance
+          </h1>
+          <p className="text-text-secondary dark:text-dark-text-secondary">
+            Track your children's grades and academic progress
+          </p>
+        </motion.div>
+
+        {/* Child Selector */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-surface-primary dark:bg-dark-surface-primary rounded-2xl p-6 shadow-lg mb-8"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center space-x-4">
+              <User className="w-6 h-6 text-accent-primary" />
+              <h3 className="text-lg font-semibold text-text-primary dark:text-dark-text-primary">
+                Select Child
+              </h3>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setSelectedChild('both')}
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                  selectedChild === 'both'
+                    ? 'bg-accent-primary text-white shadow-lg'
+                    : 'bg-background-secondary dark:bg-dark-background-secondary text-text-secondary dark:text-dark-text-secondary hover:bg-background-tertiary dark:hover:bg-dark-background-tertiary'
+                }`}
+              >
+                Both Children
+              </button>
+              <button
+                onClick={() => setSelectedChild('aarav')}
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                  selectedChild === 'aarav'
+                    ? 'bg-accent-primary text-white shadow-lg'
+                    : 'bg-background-secondary dark:bg-dark-background-secondary text-text-secondary dark:text-dark-text-secondary hover:bg-background-tertiary dark:hover:bg-dark-background-tertiary'
+                }`}
+              >
+                👦 Aarav
+              </button>
+              <button
+                onClick={() => setSelectedChild('maya')}
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                  selectedChild === 'maya'
+                    ? 'bg-accent-primary text-white shadow-lg'
+                    : 'bg-background-secondary dark:bg-dark-background-secondary text-text-secondary dark:text-dark-text-secondary hover:bg-background-tertiary dark:hover:bg-dark-background-tertiary'
+                }`}
+              >
+                👧 Maya
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Content based on selection */}
+        {selectedSubject ? (
+          renderSubjectDetail(selectedSubject)
+        ) : selectedChild === 'both' ? (
+          <div className="space-y-8">
+            {/* Comparison Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {Object.entries(childrenData).map(([key, data]) => (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, x: key === 'aarav' ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="bg-surface-primary dark:bg-dark-surface-primary rounded-2xl p-6 shadow-lg"
+                >
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="text-3xl">{data.avatar}</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-text-primary dark:text-dark-text-primary">
+                        {data.name}
+                      </h3>
+                      <p className="text-text-secondary dark:text-dark-text-secondary">{data.class}</p>
+                    </div>
+                    <div className="ml-auto">
+                      <div className="text-right">
+                        <p className="text-3xl font-bold text-accent-primary">{data.overallGPA}</p>
+                        <p className="text-sm text-text-secondary dark:text-dark-text-secondary">GPA</p>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="grade-stats">
-                    <div className="stat-item">
-                      <span className="stat-label">Teacher:</span>
-                      <span className="stat-value">{selectedGradeData.teacher}</span>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="text-center p-3 bg-background-secondary dark:bg-dark-background-secondary rounded-lg">
+                      <p className="text-lg font-bold text-text-primary dark:text-dark-text-primary">#{data.rank}</p>
+                      <p className="text-xs text-text-secondary dark:text-dark-text-secondary">Class Rank</p>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-label">Last Updated:</span>
-                      <span className="stat-value">
-                        {new Date(selectedGradeData.lastUpdated).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-label">Class Average:</span>
-                      <span className="stat-value">
-                        {classAverages[selectedSubject] || 'N/A'}%
-                      </span>
+                    <div className="text-center p-3 bg-background-secondary dark:bg-dark-background-secondary rounded-lg">
+                      <p className="text-lg font-bold text-text-primary dark:text-dark-text-primary">
+                        {Math.round(data.subjects.reduce((acc, sub) => acc + sub.percentage, 0) / data.subjects.length)}%
+                      </p>
+                      <p className="text-xs text-text-secondary dark:text-dark-text-secondary">Average</p>
                     </div>
                   </div>
-                </div>
-                
-                <div className="assignments-list">
-                  <h3>Recent Assignments</h3>
-                  <div className="table-responsive">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Assignment</th>
-                          <th>Score</th>
-                          <th>Percentage</th>
-                          <th>Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {selectedGradeData.assignments.map((assignment, index) => (
-                          <tr key={index}>
-                            <td>{assignment.name}</td>
-                            <td>{assignment.score}</td>
-                            <td>
-                              <div className="score-bar-container">
-                                <div 
-                                  className="score-bar" 
-                                  style={{
-                                    width: `${assignment.percentage}%`,
-                                    backgroundColor: getGradeColor(assignment.percentage)
-                                  }}
-                                ></div>
-                                <span className="score-percentage">{assignment.percentage}%</span>
-                              </div>
-                            </td>
-                            <td>{new Date(assignment.date).toLocaleDateString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                
-                <div className="teacher-comments">
-                  <h3>Teacher's Comments</h3>
-                  <div className="comments-box">
-                    {selectedGradeData.comments || "No additional comments at this time."}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="grades-grid">
-                {filteredGrades.map((subject) => (
-                  <div 
-                    key={subject.subject} 
-                    className="grade-card"
-                    onClick={() => setSelectedSubject(subject.subject)}
-                  >
-                    <div className="grade-card-header">
-                      <h3>{subject.subject}</h3>
-                      <div className="grade-badge" style={{ backgroundColor: getGradeColor(subject.percentage) }}>
-                        {subject.grade}
-                      </div>
-                    </div>
-                    <div className="grade-card-body">
-                      <div className="grade-percentage">
-                        {subject.percentage}%
-                        <span className="trend-icon">
-                          {renderTrendIcon(subject.trend)}
+
+                  <div className="space-y-2">
+                    {data.subjects.slice(0, 3).map((subject, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-background-secondary dark:bg-dark-background-secondary rounded-lg">
+                        <span className="text-sm font-medium text-text-primary dark:text-dark-text-primary">
+                          {subject.name}
+                        </span>
+                        <span className={`text-sm font-bold ${getGradeColor(subject.percentage)}`}>
+                          {subject.grade}
                         </span>
                       </div>
-                      <div className="grade-teacher">{subject.teacher}</div>
-                      <div className="class-average">
-                        Class Avg: {classAverages[subject.subject] || 'N/A'}%
-                      </div>
-                    </div>
-                    <div className="grade-card-footer">
-                      Last updated: {new Date(subject.lastUpdated).toLocaleDateString()}
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Report Cards View */}
-        {view === 'report-cards' && (
-          <div className="report-cards-view">
-            <h2>Report Card Archive</h2>
-            <div className="report-cards-list">
-              {reportCards.map((report, index) => (
-                <div key={index} className="report-card-item">
-                  <div className="report-card-info">
-                    <h3>{report.term} Report Card</h3>
-                    <p>Issued: {new Date(report.date).toLocaleDateString()}</p>
-                  </div>
-                  <div className="report-card-actions">
-                    <button 
-                      className="btn btn-primary"
-                      onClick={() => handleViewReportCard(report.term)}
-                    >
-                      <FaFilePdf /> View PDF
-                    </button>
-                    <button className="btn btn-secondary">
-                      <FaFilePdf /> Download
-                    </button>
-                  </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-            
-            <div className="report-card-legend">
-              <h4>Grading Scale:</h4>
-              <div className="grading-scale">
-                <div>A: 90-100%</div>
-                <div>B: 80-89%</div>
-                <div>C: 70-79%</div>
-                <div>D: 60-69%</div>
-                <div>F: Below 60%</div>
-              </div>
-            </div>
+          </div>
+        ) : (
+          <div>
+            {renderOverviewCards(childrenData[selectedChild])}
+            {renderSubjectGrades(childrenData[selectedChild])}
           </div>
         )}
-        
-        <div className="grades-footer">
-          <p>
-            <strong>Note:</strong> Grades are updated regularly but may take up to 48 hours to appear after submission.
-            Please contact the respective teacher if you have any questions about specific grades.
-          </p>
-        </div>
       </div>
-    </div>
+    </ParentPageWrapper>
   );
 };
 
