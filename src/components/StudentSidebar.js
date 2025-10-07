@@ -102,32 +102,20 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
               </NavLink>
             </li>
 
-            <li className={`has-submenu ${activeSubmenu === 'courses' ? 'open' : ''}`}>
-              <div className="submenu-header" onClick={() => toggleSubmenu('courses')}>
-                <div className="submenu-title">
-                  <BookOpen className="menu-icon w-5 h-5" />
-                  {!isSidebarCollapsed && <span className="menu-text">Courses</span>}
-                </div>
-                {!isSidebarCollapsed && (
-                  activeSubmenu === 'courses' ?
-                    <ChevronDown className="submenu-arrow w-4 h-4" /> :
-                    <ChevronRight className="submenu-arrow w-4 h-4" />
-                )}
-              </div>
-              {!isSidebarCollapsed && activeSubmenu === 'courses' && (
-                <ul className="submenu">
-                  <li><NavLink to="/student/courses">All Courses</NavLink></li>
-                  <li><NavLink to="/student/courses">My Courses</NavLink></li>
-                  <li><NavLink to="/student/courses">Recommended</NavLink></li>
-                </ul>
-              )}
+            <li className={isActive('/student/courses') ? 'active' : ''}>
+              <NavLink to="/student/courses" className="sidebar-link">
+                <BookOpen className="menu-icon w-5 h-5" />
+                {!isSidebarCollapsed && <span className="menu-text">Courses</span>}
+              </NavLink>
             </li>
 
             <li className={`${isActive('/student/assignments') ? 'active' : ''} ${pendingAssignments > 0 ? 'has-badge' : ''}`}>
               <NavLink to="/student/assignments" className="sidebar-link">
                 <div className="menu-item-content">
-                  <ClipboardList className="menu-icon w-5 h-5" />
-                  {!isSidebarCollapsed && <span className="menu-text">Assignments</span>}
+                  <div className="menu-item-left">
+                    <ClipboardList className="menu-icon w-5 h-5" />
+                    {!isSidebarCollapsed && <span className="menu-text">Assignments</span>}
+                  </div>
                   {!isSidebarCollapsed && pendingAssignments > 0 && (
                     <span className="badge">{pendingAssignments}</span>
                   )}
@@ -152,8 +140,10 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
             <li className={`${isActive('/student/messages') ? 'active' : ''} ${unreadMessages > 0 ? 'has-badge' : ''}`}>
               <NavLink to="/student/messages" className="sidebar-link">
                 <div className="menu-item-content">
-                  <Mail className="menu-icon w-5 h-5" />
-                  {!isSidebarCollapsed && <span className="menu-text">Messages</span>}
+                  <div className="menu-item-left">
+                    <Mail className="menu-icon w-5 h-5" />
+                    {!isSidebarCollapsed && <span className="menu-text">Messages</span>}
+                  </div>
                   {!isSidebarCollapsed && unreadMessages > 0 && (
                     <span className="badge">{unreadMessages}</span>
                   )}
@@ -167,22 +157,23 @@ const StudentSidebar = ({ isSidebarCollapsed, onLogout, onToggle }) => {
                 {!isSidebarCollapsed && <span className="menu-text">Profile</span>}
               </NavLink>
             </li>
-
-            <li className="logout-item">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (window.confirm('Are you sure you want to logout?')) {
-                    handleLogout();
-                  }
-                }}
-                className="logout-button"
-              >
-                <LogOut className="menu-icon w-5 h-5" />
-                {!isSidebarCollapsed && <span className="menu-text">Logout</span>}
-              </button>
-            </li>
           </ul>
+          
+          {/* Logout Section */}
+          <div className="logout-section">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (window.confirm('Are you sure you want to logout?')) {
+                  handleLogout();
+                }
+              }}
+              className="logout-button"
+            >
+              <LogOut className="menu-icon w-5 h-5" />
+              {!isSidebarCollapsed && <span className="menu-text">Logout</span>}
+            </button>
+          </div>
         </nav>
         {!isSidebarCollapsed && (
           <div className="student-sidebar-footer">

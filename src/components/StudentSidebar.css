@@ -116,6 +116,8 @@
 .student-sidebar-nav {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .student-sidebar-nav ul {
@@ -181,6 +183,59 @@
 .student-sidebar-nav a.active .menu-icon {
   color: #00b4db;
   transform: scale(1.1);
+}
+
+/* Logout Button Styling */
+.logout-section {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 0;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  padding: 18px 25px;
+  color: rgba(255, 255, 255, 0.8);
+  background: none;
+  border: none;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 16px;
+  font-weight: 500;
+  position: relative;
+  border-radius: 0 25px 25px 0;
+  margin-right: 15px;
+  backdrop-filter: blur(10px);
+  width: calc(100% - 15px);
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg,
+      rgba(255, 107, 107, 0.15) 0%,
+      rgba(238, 90, 36, 0.1) 100%);
+  color: white;
+  padding-left: 35px;
+  transform: translateX(5px);
+  box-shadow:
+    0 4px 15px rgba(255, 107, 107, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.logout-button:hover .menu-icon {
+  transform: scale(1.15) rotate(5deg);
+  color: #ff6b6b;
+}
+
+.logout-button .menu-icon {
+  margin-right: 15px;
+  transition: all 0.3s ease;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  flex-shrink: 0;
 }
 
 .student-sidebar-nav .menu-icon {
@@ -274,12 +329,43 @@
   padding: 18px 0;
 }
 
+.student-sidebar.collapsed .logout-button {
+  justify-content: center;
+  padding: 18px 0;
+  margin-right: 0;
+  width: 100%;
+}
+
+.student-sidebar.collapsed .logout-button .menu-icon {
+  margin-right: 0;
+  font-size: 1.3em;
+  width: 24px;
+  height: 24px;
+}
+
 /* Menu Item Content and Badge Styling */
 .menu-item-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.menu-item-left .menu-icon {
+  margin-right: 15px;
+}
+
+/* Logout Section */
+.logout-section {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 0;
 }
 
 .badge {

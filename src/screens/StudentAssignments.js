@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   ClipboardList, Clock, Calendar, BookOpen,
   Upload, Eye, CheckCircle, AlertCircle,
-  Search, Filter, SortAsc, SortDesc
+  Search, Filter, SortAsc, SortDesc, X, FileText, Download
 } from 'lucide-react';
 import { Card, Button, Badge, Progress } from '../components/ui/PremiumComponents';
 import { useTheme } from '../contexts/PremiumContexts';
@@ -13,6 +13,10 @@ const StudentAssignments = () => {
   const { theme } = useTheme();
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('dueDate');
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
+  const [submissionText, setSubmissionText] = useState('');
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const assignments = [
     {
@@ -27,7 +31,10 @@ const StudentAssignments = () => {
       points: 100,
       submitted: false,
       grade: null,
-      attachments: ['chapter5.pdf', 'homework_guidelines.pdf']
+      attachments: ['chapter5.pdf', 'homework_guidelines.pdf'],
+      submittedFiles: [],
+      submissionDate: null,
+      feedback: null
     },
     {
       id: 2,
@@ -41,7 +48,10 @@ const StudentAssignments = () => {
       points: 150,
       submitted: false,
       grade: null,
-      attachments: ['project_requirements.pdf']
+      attachments: ['project_requirements.pdf'],
+      submittedFiles: [],
+      submissionDate: null,
+      feedback: null
     },
     {
       id: 3,
@@ -55,7 +65,10 @@ const StudentAssignments = () => {
       points: 120,
       submitted: true,
       grade: 'A-',
-      attachments: ['essay_guidelines.pdf']
+      attachments: ['essay_guidelines.pdf'],
+      submittedFiles: ['my_essay.pdf'],
+      submissionDate: '2024-02-08',
+      feedback: 'Excellent work! Very creative and well-structured.'
     },
     {
       id: 4,
@@ -69,9 +82,49 @@ const StudentAssignments = () => {
       points: 200,
       submitted: false,
       grade: null,
-      attachments: ['assignment_specs.pdf', 'code_template.py']
+      attachments: ['assignment_specs.pdf', 'code_template.py'],
+      submittedFiles: [],
+      submissionDate: null,
+      feedback: null
     }
   ];
+
+  // Assignment functionality handlers
+  const handleSubmitAssignment = (assignmentId) => {
+    setSelectedAssignment(assignments.find(a => a.id === assignmentId));
+    setIsSubmissionModalOpen(true);
+  };
+
+  const handleFileUpload = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(prev => [...prev, ...files]);
+  };
+
+  const handleRemoveFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmission = () => {
+    if (!submissionText.trim() && selectedFiles.length === 0) {
+      alert('Please add submission text or upload files');
+      return;
+    }
+
+    // Simulate submission
+    alert('Assignment submitted successfully!');
+    setSubmissionText('');
+    setSelectedFiles([]);
+    setIsSubmissionModalOpen(false);
+    setSelectedAssignment(null);
+  };
+
+  const handleViewAssignment = (assignment) => {
+    setSelectedAssignment(assignment);
+  };
+
+  const handleDownloadAttachment = (fileName) => {
+    alert(`Downloading ${fileName}...`);
+  };
 
   const filteredAssignments = assignments.filter(assignment => {
     if (filter === 'all') return true;
@@ -152,7 +205,11 @@ const StudentAssignments = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="primary" className="flex items-center gap-2">
+              <Button 
+                variant="primary" 
+                className="flex items-center gap-2"
+                onClick={() => setIsSubmissionModalOpen(true)}
+              >
                 <Upload className="w-4 h-4" />
                 Submit Assignment
               </Button>
@@ -318,13 +375,30 @@ const StudentAssignments = () => {
                         </div>
                       )}
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewAssignment(assignment)}
+                        >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        {!assignment.submitted && (
-                          <Button variant="primary" size="sm">
+                        {!assignment.submitted ? (
+                          <Button 
+                            variant="primary" 
+                            size="sm"
+                            onClick={() => handleSubmitAssignment(assignment.id)}
+                          >
                             <Upload className="w-4 h-4 mr-2" />
                             Submit
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant="success" 
+                            size="sm"
+                            disabled
+                          >
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Submitted
                           </Button>
                         )}
                       </div>
@@ -335,6 +409,249 @@ const StudentAssignments = () => {
             ))}
           </div>
         </motion.section>
+
+        {/* Assignment Detail Modal */}
+        {selectedAssignment && !isSubmissionModalOpen && (
+          <motion.div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => setSelectedAssignment(null)}
+          >
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                      {selectedAssignment.title}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {selectedAssignment.course} • {selectedAssignment.instructor}
+                    </p>
+                  </div>
+                  <Button variant="ghost" onClick={() => setSelectedAssignment(null)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">Description</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{selectedAssignment.description}</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Assignment Details</h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Due Date:</span>
+                          <span className="font-medium">{new Date(selectedAssignment.dueDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Points:</span>
+                          <span className="font-medium">{selectedAssignment.points}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Status:</span>
+                          <Badge variant={getStatusColor(selectedAssignment.status)}>
+                            {selectedAssignment.status.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Priority:</span>
+                          <Badge variant={getPriorityColor(selectedAssignment.priority)}>
+                            {selectedAssignment.priority}
+                          </Badge>
+                        </div>
+                        {selectedAssignment.grade && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-600 dark:text-gray-400">Grade:</span>
+                            <span className="font-medium text-green-600">{selectedAssignment.grade}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Attachments</h3>
+                      <div className="space-y-2">
+                        {selectedAssignment.attachments?.map((attachment, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <FileText className="w-4 h-4 text-gray-500" />
+                              <span className="text-sm font-medium">{attachment}</span>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDownloadAttachment(attachment)}
+                            >
+                              <Download className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {selectedAssignment.submitted && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Submission Details</h3>
+                      <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                        <p className="text-sm text-green-800 dark:text-green-200 mb-2">
+                          Submitted on {new Date(selectedAssignment.submissionDate).toLocaleDateString()}
+                        </p>
+                        {selectedAssignment.feedback && (
+                          <div>
+                            <h4 className="font-medium mb-2">Feedback:</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{selectedAssignment.feedback}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    {!selectedAssignment.submitted && (
+                      <Button 
+                        variant="primary"
+                        onClick={() => {
+                          setIsSubmissionModalOpen(true);
+                        }}
+                      >
+                        <Upload className="w-4 h-4 mr-2" />
+                        Submit Assignment
+                      </Button>
+                    )}
+                    <Button 
+                      variant="ghost"
+                      onClick={() => setSelectedAssignment(null)}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Submission Modal */}
+        {isSubmissionModalOpen && (
+          <motion.div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => setIsSubmissionModalOpen(false)}
+          >
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Submit Assignment
+                  </h2>
+                  <Button variant="ghost" onClick={() => setIsSubmissionModalOpen(false)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+
+                {selectedAssignment && (
+                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <h3 className="font-semibold text-blue-900 dark:text-blue-100">
+                      {selectedAssignment.title}
+                    </h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      Due: {new Date(selectedAssignment.dueDate).toLocaleDateString()} • {selectedAssignment.points} points
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Submission Text
+                    </label>
+                    <textarea
+                      value={submissionText}
+                      onChange={(e) => setSubmissionText(e.target.value)}
+                      placeholder="Enter your submission text here..."
+                      rows={6}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Upload Files
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleFileUpload}
+                        className="hidden"
+                        id="file-upload"
+                      />
+                      <label htmlFor="file-upload" className="cursor-pointer">
+                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-600 dark:text-gray-400">Click to upload files or drag and drop</p>
+                      </label>
+                    </div>
+
+                    {selectedFiles.length > 0 && (
+                      <div className="mt-4 space-y-2">
+                        <h4 className="font-medium text-gray-900 dark:text-white">Selected Files:</h4>
+                        {selectedFiles.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                            <span className="text-sm">{file.name}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleRemoveFile(index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="primary"
+                      onClick={handleSubmission}
+                      disabled={!submissionText.trim() && selectedFiles.length === 0}
+                    >
+                      Submit Assignment
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      onClick={() => {
+                        setSubmissionText('');
+                        setSelectedFiles([]);
+                        setIsSubmissionModalOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </motion.div>
     </StudentPageWrapper>
   );

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   BookOpen, Clock, Users, Star, Play,
   Download, Calendar, Award, ChevronRight,
-  Search, Filter, Grid, List
+  Search, Filter, Grid, List, X, CheckCircle
 } from 'lucide-react';
 import { Card, Button, Badge } from '../components/ui/PremiumComponents';
 import { useTheme } from '../contexts/PremiumContexts';
@@ -13,6 +13,10 @@ const StudentCourses = () => {
   const { theme } = useTheme();
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(null);
 
   const courses = [
     {
@@ -29,7 +33,13 @@ const StudentCourses = () => {
       lessons: 24,
       completed: 18,
       nextLesson: 'Integration Techniques',
-      dueDate: '2024-02-15'
+      dueDate: '2024-02-15',
+      enrolled: true,
+      videos: [
+        { id: 1, title: 'Introduction to Calculus', duration: '15:30', watched: true },
+        { id: 2, title: 'Basic Derivatives', duration: '22:45', watched: true },
+        { id: 3, title: 'Integration Techniques', duration: '18:20', watched: false }
+      ]
     },
     {
       id: 2,
@@ -45,7 +55,12 @@ const StudentCourses = () => {
       lessons: 16,
       completed: 10,
       nextLesson: 'Chemical Reactions',
-      dueDate: '2024-02-20'
+      dueDate: '2024-02-20',
+      enrolled: true,
+      videos: [
+        { id: 1, title: 'Scientific Method', duration: '12:15', watched: true },
+        { id: 2, title: 'Chemical Reactions', duration: '19:30', watched: false }
+      ]
     },
     {
       id: 3,
@@ -61,7 +76,13 @@ const StudentCourses = () => {
       lessons: 20,
       completed: 18,
       nextLesson: 'Poetry Workshop',
-      dueDate: '2024-02-10'
+      dueDate: '2024-02-10',
+      enrolled: true,
+      videos: [
+        { id: 1, title: 'Writing Fundamentals', duration: '14:45', watched: true },
+        { id: 2, title: 'Character Development', duration: '16:20', watched: true },
+        { id: 3, title: 'Poetry Workshop', duration: '21:10', watched: false }
+      ]
     },
     {
       id: 4,
@@ -77,9 +98,57 @@ const StudentCourses = () => {
       lessons: 28,
       completed: 13,
       nextLesson: 'Object-Oriented Programming',
-      dueDate: '2024-02-25'
+      dueDate: '2024-02-25',
+      enrolled: false,
+      videos: [
+        { id: 1, title: 'Python Basics', duration: '20:15', watched: false },
+        { id: 2, title: 'Variables and Data Types', duration: '18:30', watched: false }
+      ]
     }
   ];
+
+  // Course functionality handlers
+  const handleEnrollCourse = (courseId) => {
+    const updatedCourses = courses.map(course => 
+      course.id === courseId ? { ...course, enrolled: true } : course
+    );
+    alert(`Successfully enrolled in course!`);
+  };
+
+  const handleUnenrollCourse = (courseId) => {
+    if (window.confirm('Are you sure you want to unenroll from this course?')) {
+      const updatedCourses = courses.map(course => 
+        course.id === courseId ? { ...course, enrolled: false } : course
+      );
+      alert(`Successfully unenrolled from course.`);
+    }
+  };
+
+  const handlePlayVideo = (course, video) => {
+    setCurrentVideo({ course, video });
+    setIsVideoModalOpen(true);
+  };
+
+  const handleVideoComplete = (courseId, videoId) => {
+    // Mark video as watched and update progress
+    const updatedCourses = courses.map(course => {
+      if (course.id === courseId) {
+        const updatedVideos = course.videos.map(video => 
+          video.id === videoId ? { ...video, watched: true } : video
+        );
+        const watchedCount = updatedVideos.filter(v => v.watched).length;
+        const progress = Math.round((watchedCount / updatedVideos.length) * 100);
+        return { ...course, videos: updatedVideos, progress, completed: watchedCount };
+      }
+      return course;
+    });
+    alert('Video marked as complete!');
+  };
+
+  const handleDownloadMaterial = (courseId, materialName) => {
+    // Simulate download
+    alert(`Downloading ${materialName}...`);
+  };
 
   const filteredCourses = courses.filter(course =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -228,13 +297,34 @@ const StudentCourses = () => {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button variant="primary" className="flex-1">
-                        <Play className="w-4 h-4 mr-2" />
-                        Continue
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Download className="w-4 h-4" />
-                      </Button>
+                      {course.enrolled ? (
+                        <>
+                          <Button 
+                            variant="primary" 
+                            className="flex-1"
+                            onClick={() => setSelectedCourse(course)}
+                          >
+                            <Play className="w-4 h-4 mr-2" />
+                            Continue Learning
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleDownloadMaterial(course.id, 'Course Materials')}
+                          >
+                            <Download className="w-4 h-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <Button 
+                          variant="primary" 
+                          className="flex-1"
+                          onClick={() => handleEnrollCourse(course.id)}
+                        >
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Enroll Now
+                        </Button>
+                      )}
                     </div>
                   </Card>
                 </motion.div>
@@ -304,12 +394,32 @@ const StudentCourses = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center gap-2">
-                            <Button variant="primary" size="sm">
-                              <Play className="w-4 h-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Download className="w-4 h-4" />
-                            </Button>
+                            {course.enrolled ? (
+                              <>
+                                <Button 
+                                  variant="primary" 
+                                  size="sm"
+                                  onClick={() => setSelectedCourse(course)}
+                                >
+                                  <Play className="w-4 h-4" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleDownloadMaterial(course.id, 'Course Materials')}
+                                >
+                                  <Download className="w-4 h-4" />
+                                </Button>
+                              </>
+                            ) : (
+                              <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => handleEnrollCourse(course.id)}
+                              >
+                                Enroll
+                              </Button>
+                            )}
                           </div>
                         </td>
                       </motion.tr>
@@ -320,6 +430,195 @@ const StudentCourses = () => {
             </Card>
           )}
         </motion.section>
+
+        {/* Course Detail Modal */}
+        {selectedCourse && (
+          <motion.div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => setSelectedCourse(null)}
+          >
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                      {selectedCourse.title}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Instructor: {selectedCourse.instructor}
+                    </p>
+                  </div>
+                  <Button variant="ghost" onClick={() => setSelectedCourse(null)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Course Progress</h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-full h-3 mb-2">
+                      <div
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${selectedCourse.progress}%` }}
+                      />
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                      {selectedCourse.completed} of {selectedCourse.lessons} lessons completed ({selectedCourse.progress}%)
+                    </p>
+
+                    <h3 className="text-lg font-semibold mb-4">Course Videos</h3>
+                    <div className="space-y-3">
+                      {selectedCourse.videos?.map((video) => (
+                        <div key={video.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${video.watched ? 'bg-green-500' : 'bg-gray-300'}`}>
+                              {video.watched ? <CheckCircle className="w-4 h-4 text-white" /> : <Play className="w-4 h-4 text-gray-600" />}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900 dark:text-white">{video.title}</p>
+                              <p className="text-sm text-gray-500">{video.duration}</p>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handlePlayVideo(selectedCourse, video)}
+                          >
+                            <Play className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Course Information</h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">Duration:</span>
+                        <span className="font-medium">{selectedCourse.duration}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">Level:</span>
+                        <Badge variant={selectedCourse.level === 'Advanced' ? 'danger' : selectedCourse.level === 'Intermediate' ? 'warning' : 'success'}>
+                          {selectedCourse.level}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">Students:</span>
+                        <span className="font-medium">{selectedCourse.students}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">Rating:</span>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 text-yellow-500" />
+                          <span className="font-medium">{selectedCourse.rating}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
+                      <h4 className="font-semibold mb-2">Description</h4>
+                      <p className="text-gray-600 dark:text-gray-400">{selectedCourse.description}</p>
+                    </div>
+
+                    <div className="mt-6 space-y-3">
+                      <Button 
+                        variant="primary" 
+                        className="w-full"
+                        onClick={() => alert('Navigate to next lesson')}
+                      >
+                        Continue to Next Lesson
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full"
+                        onClick={() => handleDownloadMaterial(selectedCourse.id, 'Course Materials')}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Materials
+                      </Button>
+                      {selectedCourse.enrolled && (
+                        <Button 
+                          variant="danger" 
+                          className="w-full"
+                          onClick={() => {
+                            handleUnenrollCourse(selectedCourse.id);
+                            setSelectedCourse(null);
+                          }}
+                        >
+                          Unenroll from Course
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Video Player Modal */}
+        {isVideoModalOpen && currentVideo && (
+          <motion.div 
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => setIsVideoModalOpen(false)}
+          >
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    {currentVideo.video.title}
+                  </h3>
+                  <Button variant="ghost" onClick={() => setIsVideoModalOpen(false)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+                
+                <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center mb-4">
+                  <div className="text-center">
+                    <Play className="w-16 h-16 text-white mx-auto mb-4" />
+                    <p className="text-white">Video Player Placeholder</p>
+                    <p className="text-gray-300 text-sm">Duration: {currentVideo.video.duration}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button 
+                    variant="primary"
+                    onClick={() => {
+                      handleVideoComplete(currentVideo.course.id, currentVideo.video.id);
+                      setIsVideoModalOpen(false);
+                    }}
+                  >
+                    Mark as Complete
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    onClick={() => handleDownloadMaterial(currentVideo.course.id, currentVideo.video.title)}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </motion.div>
     </StudentPageWrapper>
   );

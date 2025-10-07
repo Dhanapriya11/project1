@@ -15,8 +15,7 @@ const StudentMessages = () => {
   const [selectedConversation, setSelectedConversation] = useState(1);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const conversations = [
+  const [conversations, setConversations] = useState([
     {
       id: 1,
       name: 'Dr. Jane Smith',
@@ -128,7 +127,26 @@ const StudentMessages = () => {
         }
       ]
     }
-  ];
+  ]);
+
+  // Message functionality handlers
+  const handleFileAttachment = () => {
+    alert('File attachment feature coming soon!');
+  };
+
+  const handleMarkAsRead = (conversationId) => {
+    setConversations(prevConversations =>
+      prevConversations.map(conv =>
+        conv.id === conversationId ? { ...conv, unread: 0 } : conv
+      )
+    );
+  };
+
+  const handleArchiveConversation = (conversationId) => {
+    if (window.confirm('Archive this conversation?')) {
+      alert('Conversation archived!');
+    }
+  };
 
   const selectedConv = conversations.find(conv => conv.id === selectedConversation);
 
@@ -157,11 +175,30 @@ const StudentMessages = () => {
   };
 
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // In a real app, this would send the message to the server
-      console.log('Sending message:', newMessage);
-      setNewMessage('');
-    }
+    if (!newMessage.trim()) return;
+
+    const newMsg = {
+      id: Date.now(),
+      sender: 'You',
+      content: newMessage,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isOwn: true
+    };
+
+    setConversations(prevConversations => 
+      prevConversations.map(conv => 
+        conv.id === selectedConversation 
+          ? { 
+              ...conv, 
+              messages: [...conv.messages, newMsg],
+              lastMessage: newMessage,
+              timestamp: 'Just now'
+            }
+          : conv
+      )
+    );
+
+    setNewMessage('');
   };
 
   return (
@@ -217,7 +254,11 @@ const StudentMessages = () => {
                       ? 'bg-blue-50 dark:bg-blue-900 border-l-4 border-l-blue-500'
                       : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
-                    onClick={() => setSelectedConversation(conversation.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedConversation(conversation.id);
+                      handleMarkAsRead(conversation.id);
+                    }}
                     whileHover={{ scale: 1.01 }}
                   >
                     <div className="flex items-center gap-3">
@@ -322,13 +363,28 @@ const StudentMessages = () => {
                   {/* Message Input */}
                   <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={handleFileAttachment}
+                        title="Attach file"
+                      >
                         <Paperclip className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => alert('Image upload coming soon!')}
+                        title="Attach image"
+                      >
                         <Image className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => alert('Document upload coming soon!')}
+                        title="Attach document"
+                      >
                         <FileText className="w-4 h-4" />
                       </Button>
                       <div className="flex-1 relative">
