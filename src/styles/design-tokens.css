@@ -1,0 +1,265 @@
+/* Million Dollar Design System - Premium UI Tokens */
+:root {
+  /* Premium Primary Colors */
+  --color-blue: #1e40af;
+  --color-blue-light: #3b82f6;
+  --color-blue-dark: #1e3a8a;
+  --color-orange: #ea580c;
+  --color-orange-light: #fb923c;
+  --color-purple: #7c2d12;
+  --color-purple-light: #a855f7;
+  --color-green: #059669;
+  --color-green-light: #10b981;
+  --color-red: #dc2626;
+  --color-red-light: #ef4444;
+
+  /* Premium Neutral Palette */
+  --color-white: #ffffff;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  /* Premium Accent Colors */
+  --color-gold: #f59e0b;
+  --color-gold-light: #fbbf24;
+  --color-silver: #6b7280;
+  --color-platinum: #9ca3af;
+
+  /* Premium Border Radius */
+  --radius-small: 6px;
+  --radius-medium: 12px;
+  --radius-large: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  /* Premium Spacing Scale */
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* Premium Typography */
+  --font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-heading: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 19px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 40px;
+  --font-size-5xl: 48px;
+
+  /* Premium Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Premium Shadow System */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+  --shadow-glow-gold: 0 0 20px rgba(245, 158, 11, 0.3);
+
+  /* Premium Motion System */
+  --motion-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --motion-spin: spin 1s linear infinite;
+  --motion-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 80px;
+  --header-height: 64px;
+  --main-content-max-width: 1400px;
+
+  /* Premium Gradients */
+  --gradient-primary: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  --gradient-secondary: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --gradient-accent: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+  --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  --gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --gradient-light: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+
+  /* Premium Component Tokens */
+  --card-background: var(--color-white);
+  --card-border: 1px solid var(--color-gray-200);
+  --card-radius: var(--radius-large);
+  --card-padding: var(--space-lg);
+  --card-shadow: var(--shadow-lg);
+  --card-hover-shadow: var(--shadow-xl);
+  --card-gradient: var(--gradient-light);
+
+  /* Premium Button System */
+  --button-primary-bg: var(--gradient-primary);
+  --button-primary-color: var(--color-white);
+  --button-primary-hover: var(--gradient-primary);
+  --button-primary-shadow: var(--shadow-glow);
+  --button-secondary-bg: var(--color-white);
+  --button-secondary-color: var(--color-gray-900);
+  --button-secondary-border: 1px solid var(--color-gray-300);
+  --button-secondary-hover: var(--color-gray-50);
+  --button-gold-bg: var(--gradient-gold);
+  --button-gold-shadow: var(--shadow-glow-gold);
+
+  --input-border: 1px solid var(--color-gray-300);
+  --input-focus-border: var(--color-blue);
+  --input-focus-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+
+  /* Status Colors */
+  --status-success: var(--color-green);
+  --status-warning: var(--color-orange);
+  --status-error: var(--color-red);
+  --status-info: var(--color-blue);
+
+  /* Breakpoints */
+  --breakpoint-mobile: 576px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 992px;
+  --breakpoint-desktop: 1280px;
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #1a1a1a;
+    --color-gray-50: #2a2a2a;
+    --color-gray-100: #3a3a3a;
+    --color-gray-200: #4a4a4a;
+    --color-gray-300: #5a5a5a;
+    --color-gray-600: #9a9a9a;
+    --color-gray-900: #ffffff;
+  }
+}
+
+/* Premium Keyframe Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Utility classes */
+.text-primary { color: var(--color-blue); }
+.text-secondary { color: var(--color-gray-600); }
+.text-success { color: var(--status-success); }
+.text-warning { color: var(--status-warning); }
+.text-error { color: var(--status-error); }
+
+.bg-primary { background-color: var(--color-blue); }
+.bg-secondary { background-color: var(--color-gray-100); }
+.bg-white { background-color: var(--color-white); }
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+.rounded-sm { border-radius: var(--radius-small); }
+.rounded-md { border-radius: var(--radius-medium); }
+.rounded-lg { border-radius: var(--radius-large); }
+.rounded-xl { border-radius: var(--radius-xl); }
+
+.transition-fast { transition: var(--motion-fast); }
+.transition-normal { transition: var(--motion-normal); }

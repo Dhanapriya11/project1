@@ -133,15 +133,26 @@ const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
   return (
     <div className="student-dashboard-container">
       <main className={`main-content ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-        <header className="dashboard-header">
+        <header className="premium-header">
           <div className="header-content">
-            <div>
+            <div className="header-title-section">
               <h1>Student Dashboard</h1>
               <p>Welcome back, {studentUsername}!</p>
             </div>
+            <div className="header-stats">
+              <div className="quick-stat">
+                <span className="stat-label">Active Courses</span>
+                <span className="stat-value">{stats.coursesEnrolled}</span>
+              </div>
+              <div className="quick-stat">
+                <span className="stat-label">Due Soon</span>
+                <span className="stat-value">{stats.assignmentsDue}</span>
+              </div>
+            </div>
           </div>
           <div className="header-actions">
-            <button onClick={handleLogout} className="logout-button">
+            <button onClick={handleLogout} className="premium-button">
+              <FontAwesomeIcon icon={faExclamationCircle} />
               Logout
             </button>
           </div>
@@ -149,89 +160,175 @@ const StudentDashboard = ({ isSidebarCollapsed, onSidebarToggle }) => {
         
         <div className="dashboard-content">
           <section className="stats-section">
-            <h2>Quick Overview</h2>
-            <div className="student-dashboard-stats">
-              <div className="student-stat-card">
+            <div className="premium-section-header">
+              <h2>Quick Overview</h2>
+              <div className="section-actions">
+                <button className="premium-button secondary">
+                  <FontAwesomeIcon icon={faSpinner} />
+                  Refresh
+                </button>
+              </div>
+            </div>
+            <div className="premium-grid premium-grid-3">
+              <div className="premium-stat-card animate-fade-in">
                 <div className="stat-icon">
                   <FontAwesomeIcon icon={faBook} />
                 </div>
-                <div className="stat-info">
-                  <h3>Courses Enrolled</h3>
-                  <p className="stat-value">{stats.coursesEnrolled}</p>
+                <div className="stat-content">
+                  <div className="stat-label">Courses Enrolled</div>
+                  <div className="stat-value">{stats.coursesEnrolled}</div>
+                  <div className="stat-trend">
+                    <span className="trend-indicator positive">+2 this month</span>
+                  </div>
                 </div>
               </div>
               
-              <div className="student-stat-card">
+              <div className="premium-stat-card animate-fade-in" style={{animationDelay: '0.1s'}}>
                 <div className="stat-icon">
                   <FontAwesomeIcon icon={faClipboardList} />
                 </div>
-                <div className="stat-info">
-                  <h3>Assignments Due</h3>
-                  <p className="stat-value">{stats.assignmentsDue}</p>
+                <div className="stat-content">
+                  <div className="stat-label">Assignments Due</div>
+                  <div className="stat-value">{stats.assignmentsDue}</div>
+                  <div className="stat-trend">
+                    <span className="trend-indicator negative">Due this week</span>
+                  </div>
                 </div>
               </div>
               
-              <div className="student-stat-card">
+              <div className="premium-stat-card animate-fade-in" style={{animationDelay: '0.2s'}}>
                 <div className="stat-icon">
                   <FontAwesomeIcon icon={faGraduationCap} />
                 </div>
-                <div className="stat-info">
-                  <h3>Overall Grade</h3>
-                  <p className="stat-value">{stats.overallGrade}</p>
+                <div className="stat-content">
+                  <div className="stat-label">Overall Grade</div>
+                  <div className="stat-value">{stats.overallGrade}</div>
+                  <div className="stat-trend">
+                    <span className="trend-indicator positive">Maintained</span>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
           
           <section className="upcoming-section">
-            <h2>Upcoming Assignments</h2>
-            <div className="assignments-grid">
-              {stats.upcomingAssignments.map(assignment => (
-                <div key={assignment.id} className="assignment-card">
-                  <h4>{assignment.title}</h4>
-                  <p className="course-name">{assignment.course}</p>
-                  <p className="due-date">Due: {new Date(assignment.dueDate).toLocaleDateString()}</p>
-                  <Link to={`/student/assignments/${assignment.id}`} className="view-assignment">
-                    View Details
-                  </Link>
+            <div className="premium-section-header">
+              <h2>Upcoming Assignments</h2>
+              <Link to="/student/assignments" className="premium-button secondary">
+                View All Assignments
+                <FontAwesomeIcon icon={faCalendarAlt} />
+              </Link>
+            </div>
+            <div className="premium-grid premium-grid-auto">
+              {stats.upcomingAssignments.length > 0 ? (
+                stats.upcomingAssignments.map((assignment, index) => (
+                  <div key={assignment.id} className="premium-assignment-card animate-slide-up" style={{animationDelay: `${index * 0.1}s`}}>
+                    <div className="assignment-header">
+                      <h4 className="assignment-title">{assignment.title}</h4>
+                      <span className="priority-badge">High Priority</span>
+                    </div>
+                    <div className="assignment-details">
+                      <p className="course-name">
+                        <FontAwesomeIcon icon={faBook} />
+                        {assignment.course}
+                      </p>
+                      <p className="due-date">
+                        <FontAwesomeIcon icon={faCalendarAlt} />
+                        Due: {new Date(assignment.dueDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="assignment-actions">
+                      <Link to={`/student/assignments/${assignment.id}`} className="premium-button secondary">
+                        View Details
+                      </Link>
+                      <button className="premium-button gold">Start Now</button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="premium-empty-state">
+                  <div className="empty-icon">
+                    <FontAwesomeIcon icon={faClipboardList} />
+                  </div>
+                  <h3>No Upcoming Assignments</h3>
+                  <p>You're all caught up! Check back later for new assignments.</p>
                 </div>
-              ))}
+              )}
             </div>
           </section>
           
-          <div className="dashboard-grid">
+          <div className="premium-grid premium-grid-2">
             <section className="recent-grades">
-              <h2>Recent Grades</h2>
-              <div className="grades-list">
-                {stats.recentGrades.map(grade => (
-                  <div key={grade.id} className="grade-item">
-                    <div className="grade-info">
-                      <span className="assignment-name">{grade.assignment}</span>
-                      <span className="subject">{grade.subject}</span>
-                    </div>
-                    <span className={`grade-badge ${grade.grade[0].toLowerCase()}`}>
-                      {grade.grade}
-                    </span>
-                  </div>
-                ))}
+              <div className="premium-section-header">
+                <h2>Recent Grades</h2>
+                <Link to="/student/grades" className="premium-button secondary">
+                  View All Grades
+                  <FontAwesomeIcon icon={faGraduationCap} />
+                </Link>
               </div>
-              <Link to="/student/grades" className="view-all">View All Grades</Link>
+              <div className="premium-card">
+                {stats.recentGrades.length > 0 ? (
+                  <div className="grades-list">
+                    {stats.recentGrades.map((grade, index) => (
+                      <div key={grade.id} className="grade-item animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
+                        <div className="grade-info">
+                          <span className="assignment-name">{grade.assignment}</span>
+                          <span className="subject">{grade.subject}</span>
+                        </div>
+                        <span className={`grade-badge ${grade.grade[0].toLowerCase()}`}>
+                          {grade.grade}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="premium-empty-state">
+                    <div className="empty-icon">
+                      <FontAwesomeIcon icon={faGraduationCap} />
+                    </div>
+                    <h3>No Recent Grades</h3>
+                    <p>No recent grades available</p>
+                  </div>
+                )}
+              </div>
             </section>
             
             <section className="today-schedule">
-              <h2>Today's Schedule</h2>
-              <div className="schedule-list">
-                {stats.schedule.map((item, index) => (
-                  <div key={index} className="schedule-item">
-                    <span className="time">{item.time}</span>
-                    <div className="class-details">
-                      <span className="subject">{item.subject}</span>
-                      <span className="room">{item.room}</span>
-                    </div>
-                  </div>
-                ))}
+              <div className="premium-section-header">
+                <h2>Today's Schedule</h2>
+                <Link to="/student/schedule" className="premium-button secondary">
+                  View Full Schedule
+                  <FontAwesomeIcon icon={faCalendarAlt} />
+                </Link>
               </div>
-              <Link to="/student/schedule" className="view-all">View Full Schedule</Link>
+              <div className="premium-card">
+                {stats.schedule.length > 0 ? (
+                  <div className="schedule-list">
+                    {stats.schedule.map((item, index) => (
+                      <div key={index} className="schedule-item animate-slide-in" style={{animationDelay: `${index * 0.1}s`}}>
+                        <div className="time-badge">
+                          <span className="time">{item.time}</span>
+                        </div>
+                        <div className="class-details">
+                          <span className="subject">{item.subject}</span>
+                          <span className="room">{item.room}</span>
+                        </div>
+                        <div className="class-status">
+                          <span className="status-indicator upcoming">Upcoming</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="premium-empty-state">
+                    <div className="empty-icon">
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                    </div>
+                    <h3>No Classes Today</h3>
+                    <p>No classes scheduled for today</p>
+                  </div>
+                )}
+              </div>
             </section>
           </div>
         </div>

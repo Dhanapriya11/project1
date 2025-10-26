@@ -1,0 +1,489 @@
+/* Responsive Design - UI Schema Implementation */
+
+/* Mobile First Approach - Full Width Web App */
+@media (max-width: 576px) {
+  /* Mobile Styles - Full width web app appearance */
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: 0;
+    padding: var(--space-lg);
+    width: 100%;
+    max-width: none;
+  }
+  
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  /* Header adjustments - Keep horizontal layout */
+  .dashboard-header,
+  .admin-header,
+  .hero-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-xl);
+    width: 100%;
+  }
+  
+  .header-actions,
+  .admin-user-info {
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+  
+  /* Stats cards - Responsive grid */
+  .stats-container,
+  .admin-stats,
+  .student-dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Quick actions - Horizontal layout */
+  .actions-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  
+  .action-button {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  /* Courses grid - Responsive columns */
+  .assignments-grid,
+  .courses-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard grid - Single column on very small screens */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  /* Card adjustments - Full width */
+  .dashboard-card,
+  .recent-grades,
+  .today-schedule,
+  .admin-section,
+  .admin-stat-card,
+  .student-stat-card {
+    padding: var(--space-lg);
+    width: 100%;
+  }
+  
+  /* Typography adjustments - Keep readable sizes */
+  .dashboard-header h1,
+  .admin-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .hero-header .title {
+    font-size: 1.8em;
+  }
+  
+  /* Sidebar adjustments - Overlay style */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    transition: transform var(--motion-normal);
+    z-index: 1000;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* Overlay for mobile sidebar */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .sidebar-overlay.open {
+    display: block;
+  }
+}
+
+/* Tablet Styles - Full Width Web App */
+@media (min-width: 577px) and (max-width: 768px) {
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: 0;
+    padding: var(--space-xl);
+    width: 100%;
+    max-width: none;
+  }
+  
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  /* Header adjustments - Keep horizontal layout */
+  .dashboard-header,
+  .admin-header,
+  .hero-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    width: 100%;
+  }
+  
+  .header-actions,
+  .admin-user-info {
+    margin-top: 0;
+  }
+  
+  /* Stats cards - Multi-column responsive */
+  .stats-container,
+  .admin-stats,
+  .student-dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard sections - Two columns */
+  .dashboard-sections {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  /* Action buttons - Horizontal layout */
+  .action-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  
+  /* Courses grid - Responsive columns */
+  .assignments-grid,
+  .courses-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard grid - Two columns */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+/* Laptop Styles - Full Width Web App */
+@media (min-width: 769px) and (max-width: 992px) {
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: var(--sidebar-collapsed-width);
+    padding: var(--space-xl);
+    width: calc(100% - var(--sidebar-collapsed-width));
+    max-width: none;
+  }
+  
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
+  
+  /* Stats cards - Multi-column responsive */
+  .stats-container,
+  .admin-stats,
+  .student-dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard sections - Three columns */
+  .dashboard-sections {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  /* Courses grid - Responsive columns */
+  .assignments-grid,
+  .courses-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard grid - Two columns */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+/* Desktop Styles - Full Width Web App */
+@media (min-width: 993px) and (max-width: 1280px) {
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: var(--sidebar-width);
+    padding: var(--space-xl);
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+  }
+  
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
+  
+  /* Stats cards - Full responsive grid */
+  .stats-container,
+  .admin-stats,
+  .student-dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard sections - Four columns */
+  .dashboard-sections {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  /* Courses grid - Full responsive */
+  .assignments-grid,
+  .courses-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard grid - Two columns */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+/* Large Desktop Styles - Full Width Web App */
+@media (min-width: 1281px) {
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: var(--sidebar-width);
+    padding: var(--space-xl);
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
+  }
+  
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
+  
+  /* Stats cards - Full responsive grid */
+  .stats-container,
+  .admin-stats,
+  .student-dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard sections - Five columns */
+  .dashboard-sections {
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  /* Courses grid - Full responsive */
+  .assignments-grid,
+  .courses-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-md);
+  }
+  
+  /* Dashboard grid - Three columns */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .sidebar,
+  .header-actions,
+  .admin-user-info,
+  .logout-button,
+  .admin-logout-button {
+    display: none !important;
+  }
+  
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .dashboard-header,
+  .admin-header,
+  .hero-header {
+    box-shadow: none !important;
+    border-bottom: 1px solid #000 !important;
+  }
+  
+  .stats-card,
+  .admin-stat-card,
+  .student-stat-card,
+  .dashboard-card,
+  .admin-section {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    break-inside: avoid;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-gray-200: #000000;
+    --color-gray-300: #333333;
+    --color-gray-600: #000000;
+    --card-border: 2px solid #000000;
+  }
+  
+  .stats-card,
+  .admin-stat-card,
+  .student-stat-card,
+  .dashboard-card,
+  .admin-section {
+    border: 2px solid #000000;
+  }
+  
+  .button,
+  .action-button,
+  .admin-action-button,
+  .logout-button,
+  .admin-logout-button {
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .stats-card:hover,
+  .admin-stat-card:hover,
+  .student-stat-card:hover,
+  .dashboard-card:hover,
+  .admin-section:hover {
+    transform: none !important;
+  }
+  
+  .button:hover,
+  .action-button:hover,
+  .admin-action-button:hover,
+  .logout-button:hover,
+  .admin-logout-button:hover {
+    transform: none !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #1a1a1a;
+    --color-gray-50: #2a2a2a;
+    --color-gray-100: #3a3a3a;
+    --color-gray-200: #4a4a4a;
+    --color-gray-300: #5a5a5a;
+    --color-gray-600: #9a9a9a;
+    --color-gray-900: #ffffff;
+  }
+  
+  .stats-card,
+  .admin-stat-card,
+  .student-stat-card,
+  .dashboard-card,
+  .admin-section,
+  .dashboard-header,
+  .admin-header,
+  .hero-header {
+    background: var(--color-white);
+    color: var(--color-gray-900);
+  }
+  
+  .stats-card h3,
+  .admin-stat-card h3,
+  .student-stat-card h3,
+  .dashboard-card h2,
+  .admin-section h2 {
+    color: var(--color-gray-900);
+  }
+  
+  .stats-card .metric-value,
+  .admin-stat-number,
+  .student-stat-card .stat-value {
+    color: var(--color-gray-900);
+  }
+}

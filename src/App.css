@@ -1,117 +1,94 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
-}
+/* Million Dollar App Design - Premium Full Width Web App */
 
 .app {
   display: flex;
   min-height: 100vh;
+  background: var(--gradient-light);
+  width: 100%;
+  position: relative;
+  overflow-x: hidden;
 }
 
+.app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Main Content Layouts - Full Width */
 .main-content {
   flex: 1;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  padding: 20px;
+  background: transparent;
+  padding: var(--space-xl);
   min-height: 100vh;
+  transition: var(--motion-normal);
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-.admin-main-content {
-  margin-left: 280px;
-  padding: 25px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
-}
-
-.admin-new-main-content {
+.admin-main-content,
+.admin-new-main-content,
+.teacher-main-content,
+.parent-main-content,
+.student-main-content {
   flex: 1;
-  margin-left: 280px;
-  padding: 25px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  margin-left: var(--sidebar-width);
+  padding: var(--space-xl);
+  background: transparent;
   min-height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: var(--motion-normal);
+  width: calc(100% - var(--sidebar-width));
+  position: relative;
+  z-index: 1;
 }
 
-.main-content.sidebar-collapsed {
-  margin-left: 80px;
+.main-content.sidebar-collapsed,
+.admin-main-content.sidebar-collapsed,
+.admin-new-main-content.sidebar-collapsed,
+.teacher-main-content.sidebar-collapsed,
+.parent-main-content.sidebar-collapsed,
+.student-main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed-width);
+  width: calc(100% - var(--sidebar-collapsed-width));
 }
 
 .main-content-full {
   width: 100%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  padding: 20px;
+  background-color: var(--color-gray-50);
+  padding: var(--space-lg);
   min-height: 100vh;
 }
 
-
-.teacher-main-content {
-  flex: 1;
-  margin-left: 260px; /* Match sidebar width */
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-  width: calc(100% - 260px);
-}
-
-.teacher-main-content.sidebar-collapsed {
-  margin-left: 60px; /* Match collapsed sidebar width */
-}
-
-.parent-main-content {
-  flex: 1;
-  margin-left: 280px; /* Match sidebar width */
-  padding: 25px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
-}
-
-.parent-main-content.sidebar-collapsed {
-  margin-left: 80px; /* Match collapsed sidebar width */
-}
-
-.student-main-content {
-  flex: 1;
-  margin-left: 280px; /* Match sidebar width */
-  padding: 25px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
-}
-
-.student-main-content.sidebar-collapsed {
-  margin-left: 80px; /* Match collapsed sidebar width */
-}
-
+/* Responsive Design - Full Width Web App */
 @media (max-width: 768px) {
-  .main-content {
-    margin-left: 250px;
+  .main-content,
+  .admin-main-content,
+  .admin-new-main-content,
+  .teacher-main-content,
+  .parent-main-content,
+  .student-main-content {
+    margin-left: 0;
+    padding: var(--space-lg);
+    width: 100%;
   }
   
-  .main-content.sidebar-collapsed {
-    margin-left: 60px;
-  }
-  
-  .admin-main-content {
-    margin-left: 250px;
-  }
-  
-  .admin-main-content.sidebar-collapsed {
-    margin-left: 60px;
-  }
-  
-  .admin-new-main-content {
-    margin-left: 250px;
-  }
-  
-  .admin-new-main-content.sidebar-collapsed {
-    margin-left: 60px;
+  .main-content.sidebar-collapsed,
+  .admin-main-content.sidebar-collapsed,
+  .admin-new-main-content.sidebar-collapsed,
+  .teacher-main-content.sidebar-collapsed,
+  .parent-main-content.sidebar-collapsed,
+  .student-main-content.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
   }
 }

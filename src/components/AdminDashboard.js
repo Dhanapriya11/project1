@@ -84,97 +84,157 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard-content">
-        <header className="admin-header">
-          <div>
-            <h1>Admin Dashboard</h1>
-            <p>Welcome back, {adminUsername}!</p>
+        <header className="premium-header">
+          <div className="admin-header-content">
+            <div className="admin-title-section">
+              <h1>Admin Dashboard</h1>
+              <p>Welcome back, {adminUsername}!</p>
+            </div>
+            <div className="admin-quick-stats">
+              <div className="quick-stat">
+                <span className="stat-label">Total Users</span>
+                <span className="stat-value">{stats.totalStudents + stats.teachersAssigned}</span>
+              </div>
+              <div className="quick-stat">
+                <span className="stat-label">Active Courses</span>
+                <span className="stat-value">{stats.coursesUploaded}</span>
+              </div>
+            </div>
           </div>
-          <button onClick={handleLogout} className="admin-logout-button">
+          <button onClick={handleLogout} className="premium-button">
             Logout
           </button>
         </header>
 
-        <div className="admin-stats">
-          <div className="admin-stat-card">
-            <h3>Total Students</h3>
-            <p className="admin-stat-number">{stats.totalStudents}</p>
+        <div className="premium-grid premium-grid-4">
+          <div className="premium-stat-card animate-fade-in">
+            <div className="stat-icon">
+              <span>👥</span>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Total Students</div>
+              <div className="stat-value">{stats.totalStudents}</div>
+              <div className="stat-trend">
+                <span className="trend-indicator positive">+12 this month</span>
+              </div>
+            </div>
           </div>
-          <div className="admin-stat-card">
-            <h3>Teachers Assigned</h3>
-            <p className="admin-stat-number">{stats.teachersAssigned}</p>
+          <div className="premium-stat-card animate-fade-in" style={{animationDelay: '0.1s'}}>
+            <div className="stat-icon">
+              <span>👨‍🏫</span>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Teachers Assigned</div>
+              <div className="stat-value">{stats.teachersAssigned}</div>
+              <div className="stat-trend">
+                <span className="trend-indicator positive">Active</span>
+              </div>
+            </div>
           </div>
-          <div className="admin-stat-card">
-            <h3>Courses Uploaded</h3>
-            <p className="admin-stat-number">{stats.coursesUploaded}</p>
+          <div className="premium-stat-card animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <div className="stat-icon">
+              <span>📚</span>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Courses Uploaded</div>
+              <div className="stat-value">{stats.coursesUploaded}</div>
+              <div className="stat-trend">
+                <span className="trend-indicator positive">+5 this week</span>
+              </div>
+            </div>
           </div>
-          <div className="admin-stat-card">
-            <h3>Pending Tasks</h3>
-            <p className="admin-stat-number">{stats.pendingTasks}</p>
+          <div className="premium-stat-card animate-fade-in" style={{animationDelay: '0.3s'}}>
+            <div className="stat-icon">
+              <span>⏰</span>
+            </div>
+            <div className="stat-content">
+              <div className="stat-label">Pending Tasks</div>
+              <div className="stat-value">{stats.pendingTasks}</div>
+              <div className="stat-trend">
+                <span className="trend-indicator negative">Needs attention</span>
+              </div>
+            </div>
           </div>
         </div>
         
-        <div className="admin-sections">
-          <div className="admin-section">
-            <h2>Class Management</h2>
+        <div className="premium-grid premium-grid-2">
+          <div className="premium-card animate-slide-up">
+            <div className="premium-section-header">
+              <h2>Class Management</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Manage classes, students, and assignments</p>
-              <button className="admin-action-button" onClick={handleClassManagement}>Manage Classes</button>
+              <p>Manage classes, students, and assignments with advanced tools and analytics.</p>
+              <button className="premium-button" onClick={handleClassManagement}>Manage Classes</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>Reports</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.1s'}}>
+            <div className="premium-section-header">
+              <h2>Reports</h2>
+            </div>
             <div className="admin-section-content">
-              <p>View detailed reports and analytics</p>
-              <button className="admin-action-button" onClick={handleReports}>View Reports</button>
+              <p>View detailed reports and analytics with comprehensive insights and data visualization.</p>
+              <button className="premium-button" onClick={handleReports}>View Reports</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>Calendar</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.2s'}}>
+            <div className="premium-section-header">
+              <h2>Calendar</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Manage schedules and events</p>
-              <button className="admin-action-button" onClick={handleCalendar}>View Calendar</button>
+              <p>Manage schedules and events with intelligent scheduling and conflict detection.</p>
+              <button className="premium-button" onClick={handleCalendar}>View Calendar</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>Communication</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.3s'}}>
+            <div className="premium-section-header">
+              <h2>Communication</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Send messages and announcements</p>
-              <button className="admin-action-button" onClick={handleCommunication}>Send Message</button>
+              <p>Send messages and announcements with advanced targeting and delivery tracking.</p>
+              <button className="premium-button" onClick={handleCommunication}>Send Message</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>User Management</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.4s'}}>
+            <div className="premium-section-header">
+              <h2>User Management</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Manage users, teachers, and parents</p>
-              <button className="admin-action-button" onClick={handleUserManagement}>Manage Users</button>
+              <p>Manage users, teachers, and parents with role-based access control and permissions.</p>
+              <button className="premium-button gold" onClick={handleUserManagement}>Manage Users</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>Content Management</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.5s'}}>
+            <div className="premium-section-header">
+              <h2>Content Management</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Manage and upload course content</p>
-              <button className="admin-action-button" onClick={handleContentManagement}>Manage Content</button>
+              <p>Manage and upload course content with intelligent organization and search capabilities.</p>
+              <button className="premium-button" onClick={handleContentManagement}>Manage Content</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>Role & Permissions</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.6s'}}>
+            <div className="premium-section-header">
+              <h2>Role & Permissions</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Manage user roles and permissions</p>
-              <button className="admin-action-button" onClick={handleRolePermissions}>Manage Roles</button>
+              <p>Manage user roles and permissions with granular access control and security policies.</p>
+              <button className="premium-button" onClick={handleRolePermissions}>Manage Roles</button>
             </div>
           </div>
           
-          <div className="admin-section">
-            <h2>AI Support Tools</h2>
+          <div className="premium-card animate-slide-up" style={{animationDelay: '0.7s'}}>
+            <div className="premium-section-header">
+              <h2>AI Support Tools</h2>
+            </div>
             <div className="admin-section-content">
-              <p>Access AI-powered educational tools</p>
-              <button className="admin-action-button" onClick={handleAISupport}>Access AI Tools</button>
+              <p>Access AI-powered educational tools with machine learning and intelligent automation.</p>
+              <button className="premium-button gold" onClick={handleAISupport}>Access AI Tools</button>
             </div>
           </div>
         </div>
